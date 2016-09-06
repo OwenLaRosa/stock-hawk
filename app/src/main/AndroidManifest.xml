@@ -20,7 +20,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.MyStocksActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,7 +46,8 @@
 
         <activity
             android:name=".ui.StockDetailActivity"
-            android:label="@string/title_activity_stock_detail"></activity>
+            android:label="@string/title_activity_stock_detail"
+            android:parentActivityName=".ui.MyStocksActivity"></activity>
     </application>
 
 </manifest>
