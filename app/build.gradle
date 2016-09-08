@@ -35,4 +35,5 @@ dependencies {
     compile 'com.melnykov:floatingactionbutton:1.2.0'
     compile 'com.android.support:design:23.4.0'
     apt 'net.simonvt.schematic:schematic-compiler:0.6.3'
+    compile 'com.diogobernardino:williamchart:2.2'
 }
