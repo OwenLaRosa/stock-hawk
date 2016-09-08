@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.db.chart.model.LineSet;
 import com.db.chart.view.LineChartView;
@@ -31,6 +32,7 @@ public class StockDetailActivityFragment extends Fragment {
     private OkHttpClient mClient = new OkHttpClient();
 
     private LineChartView mLineGraph;
+    private ProgressBar mChartProgressBar;
 
     public StockDetailActivityFragment() {
     }
@@ -40,6 +42,7 @@ public class StockDetailActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_stock_detail, container, false);
         mLineGraph = (LineChartView) rootView.findViewById(R.id.line_graph);
+        mChartProgressBar = (ProgressBar) rootView.findViewById(R.id.chart_progress_bar);
 
         AsyncTask.execute(new Runnable() {
             @Override
@@ -59,6 +62,7 @@ public class StockDetailActivityFragment extends Fragment {
     private void getGraphData() throws IOException {
         // create a request, use hardcoded symbol to fetch data for now
         // URL referenced from https://discussions.udacity.com/t/plotting-the-stock-price-over-time-within-the-stock-hawk-project/159569/8
+        mChartProgressBar.setVisibility(View.VISIBLE);
         Request request = new Request.Builder().url("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.historicaldata%20where%20symbol%20%3D%20%22YHOO%22%20and%20startDate%20%3D%20%222009-09-11%22%20and%20endDate%20%3D%20%222010-03-10%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys").build();
         Response response = mClient.newCall(request).execute();
         String result = response.body().string();
@@ -108,6 +112,13 @@ public class StockDetailActivityFragment extends Fragment {
         // get the bounds from the max and min closing prices
         int upperBound = roundValueToMultiple(max, multiple, true);
         int lowerBound = roundValueToMultiple(min, multiple, false);
+        // hide progress bar on the UI thread
+        mChartProgressBar.post(new Runnable() {
+            @Override
+            public void run() {
+                mChartProgressBar.setVisibility(View.GONE);
+            }
+        });
         mLineGraph.addData(dataSet); // populate the graph
         mLineGraph.setAxisBorderValues(lowerBound, upperBound); // set the Y axis bounds
         mLineGraph.show();
