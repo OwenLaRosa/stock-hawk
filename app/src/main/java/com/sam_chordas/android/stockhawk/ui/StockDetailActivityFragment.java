@@ -11,6 +11,8 @@ import android.widget.ProgressBar;
 
 import com.db.chart.model.LineSet;
 import com.db.chart.view.LineChartView;
+import com.db.chart.view.animation.Animation;
+import com.db.chart.view.animation.easing.LinearEase;
 import com.sam_chordas.android.stockhawk.R;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -119,9 +121,7 @@ public class StockDetailActivityFragment extends Fragment {
                 mChartProgressBar.setVisibility(View.GONE);
             }
         });
-        mLineGraph.addData(dataSet); // populate the graph
-        mLineGraph.setAxisBorderValues(lowerBound, upperBound); // set the Y axis bounds
-        mLineGraph.show();
+        displayChartWithData(dataSet, lowerBound, upperBound);
     }
 
     /**
@@ -134,6 +134,23 @@ public class StockDetailActivityFragment extends Fragment {
     public int roundValueToMultiple(float value, int multiple, boolean roundUp) {
         int multiplyBy = roundUp ? multiple + 1 : multiple;
         return (int) Math.floor((double) value / multiple) * multiplyBy;
+    }
+
+    /**
+     * Set the chart's data, set appearance, add animation, and display it onscreen
+     * @param dataSet Points to be displayed on the graph
+     * @param lowerBound Minimum value shown on the Y axis
+     * @param upperBound Maximum value shown on the Y axis
+     */
+    private void displayChartWithData(LineSet dataSet, int lowerBound, int upperBound) {
+        // add the data and set any visual appearance
+        dataSet.setColor(getResources().getColor(R.color.material_blue_700));
+        mLineGraph.addData(dataSet);
+        mLineGraph.setAxisBorderValues(lowerBound, upperBound);
+        // add an animation to the chart, referenced from: http://stackoverflow.com/questions/36164123/animations-in-williamchart/38760291
+        Animation animation = new Animation(500);
+        animation.setEasing(new LinearEase());
+        mLineGraph.show(animation);
     }
 
 }

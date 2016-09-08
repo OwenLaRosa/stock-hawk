@@ -22,7 +22,8 @@
             android:id="@+id/line_graph"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/material_green_700"/>
+            android:background="@color/white"
+            android:padding="16dp"/>
         
         <ProgressBar
             android:id="@+id/chart_progress_bar"
