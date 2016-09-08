@@ -73,14 +73,56 @@ public class StockDetailActivityFragment extends Fragment {
         JSONObject resultsObject = queryObject.getJSONObject("results");
         JSONArray quotes = resultsObject.getJSONArray("quote");
         LineSet dataSet = new LineSet();
+        if (quotes.length() == 0) {
+            return;
+        }
+        // start with an initial value for minimum and maximum
+        // this is so we can adjust the bounds of the Y axis
+        float min = (float) quotes.getJSONObject(0).getDouble("Close");
+        float max = (float) quotes.getJSONObject(0).getDouble("Close");
         for (int i = 0; i < quotes.length(); i++) {
             JSONObject quote = quotes.getJSONObject(i);
             float close = (float) quote.getDouble("Close");
+            Log.d(LOG_TAG, String.format("%g", close));
             // no label for now
             dataSet.addPoint("", close);
+            // update the upper and lower bounds if needed
+            if (close < min) min = close;
+            if (close > max) max = close;
         }
-        mLineGraph.addData(dataSet);
+        int multiple;
+        // round the numbers to the nearest multiple of
+        if (max < 10) {
+            multiple = 1;
+        } else if (max < 50) {
+            multiple = 5;
+        } else if (max < 100) {
+            multiple = 10;
+        } else if (max < 200) {
+            multiple = 20;
+        } else if (max < 400) {
+            multiple = 50;
+        } else {
+            multiple = 100;
+        }
+        // get the bounds from the max and min closing prices
+        int upperBound = roundValueToMultiple(max, multiple, true);
+        int lowerBound = roundValueToMultiple(min, multiple, false);
+        mLineGraph.addData(dataSet); // populate the graph
+        mLineGraph.setAxisBorderValues(lowerBound, upperBound); // set the Y axis bounds
         mLineGraph.show();
+    }
+
+    /**
+     * Round a number according to the multiple to the nearest multiple
+     * @param value The number to be rounded
+     * @param multiple Nearest multiple to be rounded to
+     * @param roundUp true if the number should be rounded up, false if down
+     * @return
+     */
+    public int roundValueToMultiple(float value, int multiple, boolean roundUp) {
+        int multiplyBy = roundUp ? multiple + 1 : multiple;
+        return (int) Math.floor((double) value / multiple) * multiplyBy;
     }
 
 }
