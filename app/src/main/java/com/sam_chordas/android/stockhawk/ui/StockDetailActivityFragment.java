@@ -14,6 +14,7 @@ import com.db.chart.view.LineChartView;
 import com.db.chart.view.animation.Animation;
 import com.db.chart.view.animation.easing.LinearEase;
 import com.sam_chordas.android.stockhawk.R;
+import com.sam_chordas.android.stockhawk.info.Article;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -167,6 +168,14 @@ public class StockDetailActivityFragment extends Fragment {
         JSONObject rootObject = new JSONObject(json);
         JSONObject results = rootObject.getJSONObject("results");
         JSONArray articles = rootObject.getJSONArray("item");
+        Article[] articleObjects = new Article[articles.length()];
+        for (int i = 0; i < articles.length(); i++) {
+            // create an article object for each item
+            String title = articles.getJSONObject(i).getString("title");
+            String link = articles.getJSONObject(i).getString("link");
+            Article newArticle = new Article(title, link);
+            articleObjects[i] = newArticle;
+        }
     }
 
 }
