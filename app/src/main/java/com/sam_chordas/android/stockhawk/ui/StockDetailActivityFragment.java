@@ -51,6 +51,7 @@ public class StockDetailActivityFragment extends Fragment {
             public void run() {
                 try {
                     getGraphData();
+                    getCompanyNews();
                 } catch (IOException e) {
                     Log.d(LOG_TAG, "Failed to download historical data" + e.toString());
                 }
@@ -151,6 +152,21 @@ public class StockDetailActivityFragment extends Fragment {
         Animation animation = new Animation(500);
         animation.setEasing(new LinearEase());
         mLineGraph.show(animation);
+    }
+
+    private void getCompanyNews() throws IOException {
+        Request request = new Request.Builder().url("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20rss%20where%20url%3D%22http%3A%2F%2Ffinance.yahoo.com%2Frss%2Fheadline%3Fs%3Dgoog%22&format=json&diagnostics=true&callback=").build();
+        Response response = mClient.newCall(request).execute();
+        String result = response.body().toString();
+        try {
+            showNewsInList(result);
+        } catch (JSONException e) {}
+    }
+
+    private void showNewsInList(String json) throws JSONException {
+        JSONObject rootObject = new JSONObject(json);
+        JSONObject results = rootObject.getJSONObject("results");
+        JSONArray articles = rootObject.getJSONArray("item");
     }
 
 }
