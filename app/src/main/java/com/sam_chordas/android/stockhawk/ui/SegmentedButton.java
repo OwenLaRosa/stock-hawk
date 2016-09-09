@@ -42,6 +42,9 @@ public class SegmentedButton extends LinearLayout {
         // inflate the linear layout
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.segmented_button_layout, this);
+        // initialize the buttons array list
+        buttons = new ArrayList<Button>();
+
     }
 
     /**

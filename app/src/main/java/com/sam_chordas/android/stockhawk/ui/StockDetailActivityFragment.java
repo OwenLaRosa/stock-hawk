@@ -36,6 +36,7 @@ public class StockDetailActivityFragment extends Fragment {
 
     private LineChartView mLineGraph;
     private ProgressBar mChartProgressBar;
+    private SegmentedButton mChartSegmentedButton;
 
     public StockDetailActivityFragment() {
     }
@@ -46,6 +47,8 @@ public class StockDetailActivityFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_stock_detail, container, false);
         mLineGraph = (LineChartView) rootView.findViewById(R.id.line_graph);
         mChartProgressBar = (ProgressBar) rootView.findViewById(R.id.chart_progress_bar);
+        mChartSegmentedButton = (SegmentedButton) rootView.findViewById(R.id.chart_segmented_button);
+        initSegmentedButton();
 
         AsyncTask.execute(new Runnable() {
             @Override
@@ -60,6 +63,12 @@ public class StockDetailActivityFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    private void initSegmentedButton() {
+        mChartSegmentedButton.addButtonWithTitle("1 Month");
+        mChartSegmentedButton.addButtonWithTitle("6 Months");
+        mChartSegmentedButton.addButtonWithTitle("1 Year");
     }
 
     // this should be moved outside the fragment
