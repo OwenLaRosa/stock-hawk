@@ -12,28 +12,46 @@
         <!-- place holder for basic stock info -->
 
     </FrameLayout>
-    
+
+    <TextView
+        android:id="@+id/chart_title_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center"
+        android:text="Closing price over 10 years."
+        android:textColor="@color/black"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textStyle="bold"
+        android:paddingTop="8dp"/>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@color/white"
         android:layout_weight="3">
 
         <com.db.chart.view.LineChartView
             android:id="@+id/line_graph"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
-            android:padding="16dp"/>
-        
+            android:padding="16dp" />
+
         <ProgressBar
             android:id="@+id/chart_progress_bar"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:indeterminate="true"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:indeterminate="true" />
 
     </FrameLayout>
-    
+
+    <com.sam_chordas.android.stockhawk.ui.SegmentedButton
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/white"/>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
