@@ -56,6 +56,13 @@ public class SegmentedButton extends LinearLayout {
         Button button = new Button(mContext);
         button.setText(title);
         button.setTextColor(getResources().getColor(R.color.material_blue_500));
+        button.setBackgroundColor(getResources().getColor(R.color.white));
+        // set the weight so buttons will take up equal space
+        LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1);
+        // leave enough room for bottom shadow when buttons are elevated
+        // also add some spacing inbetween the buttons
+        params.setMargins(4, 0, 4, 8);
+        button.setLayoutParams(params);
         buttons.add(button);
         addView(button);
         return button;

@@ -35,7 +35,9 @@
             android:id="@+id/line_graph"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="16dp" />
+            android:paddingTop="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"/>
 
         <ProgressBar
             android:id="@+id/chart_progress_bar"
@@ -49,9 +51,11 @@
     <com.sam_chordas.android.stockhawk.ui.SegmentedButton
         android:id="@+id/chart_segmented_button"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/white"/>
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="8dp"/>
 
     <FrameLayout
         android:layout_width="match_parent"
