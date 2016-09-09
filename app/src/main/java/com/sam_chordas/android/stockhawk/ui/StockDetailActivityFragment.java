@@ -146,7 +146,8 @@ public class StockDetailActivityFragment extends Fragment {
      */
     private void displayChartWithData(LineSet dataSet, int lowerBound, int upperBound) {
         // add the data and set any visual appearance
-        dataSet.setColor(getResources().getColor(R.color.material_blue_700));
+        // only access resources if the fragment is attached to prevent illegal state exception
+        if (isAdded()) dataSet.setColor(getResources().getColor(R.color.material_blue_700));
         mLineGraph.addData(dataSet);
         mLineGraph.setAxisBorderValues(lowerBound, upperBound);
         // add an animation to the chart, referenced from: http://stackoverflow.com/questions/36164123/animations-in-williamchart/38760291
