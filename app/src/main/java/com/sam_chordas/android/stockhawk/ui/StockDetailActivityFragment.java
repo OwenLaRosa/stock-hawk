@@ -66,9 +66,24 @@ public class StockDetailActivityFragment extends Fragment {
     }
 
     private void initSegmentedButton() {
-        mChartSegmentedButton.addButtonWithTitle("1 Month");
-        mChartSegmentedButton.addButtonWithTitle("6 Months");
-        mChartSegmentedButton.addButtonWithTitle("1 Year");
+        mChartSegmentedButton.addButtonWithTitle("1 Month", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG_TAG, "1 month");
+            }
+        });
+        mChartSegmentedButton.addButtonWithTitle("6 Months", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG_TAG, "6 months");
+            }
+        });
+        mChartSegmentedButton.addButtonWithTitle("1 Year", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG_TAG, "1 year");
+            }
+        });
     }
 
     // this should be moved outside the fragment

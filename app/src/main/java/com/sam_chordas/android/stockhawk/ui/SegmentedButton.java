@@ -1,8 +1,11 @@
 package com.sam_chordas.android.stockhawk.ui;
 
 import android.content.Context;
+import android.os.Build;
+import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -19,6 +22,8 @@ public class SegmentedButton extends LinearLayout {
     private Context mContext;
 
     private ArrayList<Button> buttons;
+
+    private Button clickedButton;
 
     public SegmentedButton(Context context) {
         super(context);
@@ -52,8 +57,8 @@ public class SegmentedButton extends LinearLayout {
      * @param title Text to be displayed on the button
      * @return The newly added button
      */
-    public Button addButtonWithTitle(String title) {
-        Button button = new Button(mContext);
+    public Button addButtonWithTitle(String title, OnClickListener callback) {
+        Button button = new AppCompatButton(mContext);
         button.setText(title);
         button.setTextColor(getResources().getColor(R.color.material_blue_500));
         button.setBackgroundColor(getResources().getColor(R.color.white));
@@ -63,6 +68,10 @@ public class SegmentedButton extends LinearLayout {
         // also add some spacing inbetween the buttons
         params.setMargins(4, 0, 4, 8);
         button.setLayoutParams(params);
+        // add the callback to the click listener's default behavior
+        BaseOnClickListener clickListener = new BaseOnClickListener();
+        clickListener.callbackListener = callback;
+        button.setOnClickListener(clickListener);
         buttons.add(button);
         addView(button);
         return button;
@@ -73,16 +82,37 @@ public class SegmentedButton extends LinearLayout {
      * @param index Index of the button to be removed
      */
     public void removeButtonAtIndex(int index) {
+        if (buttons.get(index) == clickedButton) {
+            clickedButton = null;
+        }
         buttons.remove(index);
     }
 
-    /**
-     * Get a button from the view
-     * @param index Index of the button
-     * @return Button at the specified index
-     */
-    public Button buttonAtIndex(int index) {
-        return buttons.get(index);
+    private class BaseOnClickListener implements OnClickListener {
+        OnClickListener callbackListener;
+        @Override
+        public void onClick(View v) {
+            if (clickedButton != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    // devices supporting lollipop or greater get elevation
+                    clickedButton.setElevation(0);
+                } else {
+                    // on older devices, selection is signaled by highlighting the button
+                    clickedButton.setTextColor(getResources().getColor(R.color.material_blue_500));
+                    clickedButton.setBackgroundColor(getResources().getColor(R.color.white));
+                }
+            }
+            clickedButton = (Button) v;
+            // set the button to highlighted state
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                clickedButton.setElevation(4);
+            } else {
+                clickedButton.setTextColor(getResources().getColor(R.color.white));
+                clickedButton.setBackgroundColor(getResources().getColor(R.color.material_blue_500));
+            }
+            // after configuring the UI, invoke the custom callback
+            if (callbackListener != null) callbackListener.onClick(v);
+        }
     }
 
 }
