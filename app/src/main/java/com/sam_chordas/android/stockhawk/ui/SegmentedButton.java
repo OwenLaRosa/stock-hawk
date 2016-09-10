@@ -1,7 +1,6 @@
 package com.sam_chordas.android.stockhawk.ui;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -18,6 +17,8 @@ import java.util.ArrayList;
  */
 
 public class SegmentedButton extends LinearLayout {
+
+    private static final String LOG_TAG = SegmentedButton.class.getSimpleName();
 
     private Context mContext;
 
@@ -72,6 +73,7 @@ public class SegmentedButton extends LinearLayout {
         BaseOnClickListener clickListener = new BaseOnClickListener();
         clickListener.callbackListener = callback;
         button.setOnClickListener(clickListener);
+        button.setBackgroundColor(getResources().getColor(R.color.transparent));
         buttons.add(button);
         addView(button);
         return button;
@@ -93,23 +95,12 @@ public class SegmentedButton extends LinearLayout {
         @Override
         public void onClick(View v) {
             if (clickedButton != null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    // devices supporting lollipop or greater get elevation
-                    clickedButton.setElevation(0);
-                } else {
-                    // on older devices, selection is signaled by highlighting the button
-                    clickedButton.setTextColor(getResources().getColor(R.color.material_blue_500));
-                    clickedButton.setBackgroundColor(getResources().getColor(R.color.white));
-                }
+                // reset button to flat state
+                clickedButton.setBackgroundColor(getResources().getColor(R.color.transparent));
             }
             clickedButton = (Button) v;
-            // set the button to highlighted state
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                clickedButton.setElevation(4);
-            } else {
-                clickedButton.setTextColor(getResources().getColor(R.color.white));
-                clickedButton.setBackgroundColor(getResources().getColor(R.color.material_blue_500));
-            }
+            // setting an opaque background shows a border
+            clickedButton.setBackgroundColor(getResources().getColor(R.color.white));
             // after configuring the UI, invoke the custom callback
             if (callbackListener != null) callbackListener.onClick(v);
         }
