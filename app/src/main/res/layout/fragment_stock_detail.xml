@@ -59,14 +59,11 @@
         android:paddingBottom="8dp"
         android:elevation="2dp"/>
 
-    <FrameLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/news_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
-        android:background="@color/material_blue_500">
-
-        <!-- place holder for company news -->
-
-    </FrameLayout>
+        android:background="@color/material_blue_500"/>
     
 </LinearLayout>
