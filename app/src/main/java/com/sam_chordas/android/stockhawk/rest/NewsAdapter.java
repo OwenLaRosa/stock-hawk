@@ -79,6 +79,15 @@ public class NewsAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
+    /**
+     * Get an article at the specified position
+     * @param index Position of the article
+     * @return Article instance
+     */
+    public Article getArticle(int index) {
+        return articles.get(index);
+    }
+
     private static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public final TextView titleTextView;

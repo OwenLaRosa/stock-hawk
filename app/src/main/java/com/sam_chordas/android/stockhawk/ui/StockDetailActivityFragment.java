@@ -1,8 +1,11 @@
 package com.sam_chordas.android.stockhawk.ui;
 
 import android.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,8 @@ import com.db.chart.view.animation.Animation;
 import com.db.chart.view.animation.easing.LinearEase;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.info.Article;
+import com.sam_chordas.android.stockhawk.rest.NewsAdapter;
+import com.sam_chordas.android.stockhawk.rest.RecyclerViewItemClickListener;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -24,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -37,6 +43,7 @@ public class StockDetailActivityFragment extends Fragment {
     private LineChartView mLineGraph;
     private ProgressBar mChartProgressBar;
     private SegmentedButton mChartSegmentedButton;
+    private RecyclerView mRecyclerView;
 
     public StockDetailActivityFragment() {
     }
@@ -49,6 +56,20 @@ public class StockDetailActivityFragment extends Fragment {
         mChartProgressBar = (ProgressBar) rootView.findViewById(R.id.chart_progress_bar);
         mChartSegmentedButton = (SegmentedButton) rootView.findViewById(R.id.chart_segmented_button);
         initSegmentedButton();
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.news_recycler_view);
+        NewsAdapter newsAdapter = new NewsAdapter();
+        mRecyclerView.setAdapter(newsAdapter);
+        mRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(getActivity(),
+                new RecyclerViewItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View v, int position) {
+                        String url = ((NewsAdapter) mRecyclerView.getAdapter()).getArticle(position).link;
+                        // open the link in the browser
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse(url));
+                        startActivity(intent);
+                    }
+                }));
 
         AsyncTask.execute(new Runnable() {
             @Override
@@ -168,14 +189,15 @@ public class StockDetailActivityFragment extends Fragment {
         JSONObject rootObject = new JSONObject(json);
         JSONObject results = rootObject.getJSONObject("results");
         JSONArray articles = rootObject.getJSONArray("item");
-        Article[] articleObjects = new Article[articles.length()];
+        ArrayList<Article> articleObjects = new ArrayList<Article>();
         for (int i = 0; i < articles.length(); i++) {
             // create an article object for each item
             String title = articles.getJSONObject(i).getString("title");
             String link = articles.getJSONObject(i).getString("link");
             Article newArticle = new Article(title, link);
-            articleObjects[i] = newArticle;
+            articleObjects.add(newArticle);
         }
+        ((NewsAdapter) mRecyclerView.getAdapter()).addAllArticles(articleObjects);
     }
 
 }
