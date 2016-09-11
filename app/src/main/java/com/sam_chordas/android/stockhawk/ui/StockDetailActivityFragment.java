@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -59,6 +60,7 @@ public class StockDetailActivityFragment extends Fragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.news_recycler_view);
         NewsAdapter newsAdapter = new NewsAdapter();
         mRecyclerView.setAdapter(newsAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(getActivity(),
                 new RecyclerViewItemClickListener.OnItemClickListener() {
                     @Override
@@ -179,7 +181,7 @@ public class StockDetailActivityFragment extends Fragment {
     private void getCompanyNews() throws IOException {
         Request request = new Request.Builder().url("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20rss%20where%20url%3D%22http%3A%2F%2Ffinance.yahoo.com%2Frss%2Fheadline%3Fs%3Dgoog%22&format=json&diagnostics=true&callback=").build();
         Response response = mClient.newCall(request).execute();
-        String result = response.body().toString();
+        String result = response.body().string();
         try {
             showNewsInList(result);
         } catch (JSONException e) {}
@@ -187,9 +189,10 @@ public class StockDetailActivityFragment extends Fragment {
 
     private void showNewsInList(String json) throws JSONException {
         JSONObject rootObject = new JSONObject(json);
-        JSONObject results = rootObject.getJSONObject("results");
-        JSONArray articles = rootObject.getJSONArray("item");
-        ArrayList<Article> articleObjects = new ArrayList<Article>();
+        JSONObject query = rootObject.getJSONObject("query");
+        JSONObject results = query.getJSONObject("results");
+        JSONArray articles = results.getJSONArray("item");
+        final ArrayList<Article> articleObjects = new ArrayList<Article>();
         for (int i = 0; i < articles.length(); i++) {
             // create an article object for each item
             String title = articles.getJSONObject(i).getString("title");
@@ -197,7 +200,13 @@ public class StockDetailActivityFragment extends Fragment {
             Article newArticle = new Article(title, link);
             articleObjects.add(newArticle);
         }
-        ((NewsAdapter) mRecyclerView.getAdapter()).addAllArticles(articleObjects);
+        // add articles to adapter and update UI on main thread
+        mRecyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                ((NewsAdapter) mRecyclerView.getAdapter()).addAllArticles(articleObjects);
+            }
+        });
     }
 
 }
