@@ -29,7 +29,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/white"
-        android:layout_weight="3">
+        android:layout_weight="3"
+        android:elevation="2dp">
 
         <com.db.chart.view.LineChartView
             android:id="@+id/line_graph"
@@ -55,7 +56,8 @@
         android:background="@color/white"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:paddingBottom="8dp"/>
+        android:paddingBottom="8dp"
+        android:elevation="2dp"/>
 
     <FrameLayout
         android:layout_width="match_parent"
