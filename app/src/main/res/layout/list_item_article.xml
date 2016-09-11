@@ -6,7 +6,7 @@
     android:background="@color/material_blue_500">
 
     <TextView
-        android:id="@+id/article_title_text_field"
+        android:id="@+id/article_title_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:textAppearanceMedium"
@@ -14,7 +14,7 @@
         android:maxLines="2"/>
 
     <TextView
-        android:id="@+id/article_url_text_field"
+        android:id="@+id/article_url_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:textAppearanceSmall"
