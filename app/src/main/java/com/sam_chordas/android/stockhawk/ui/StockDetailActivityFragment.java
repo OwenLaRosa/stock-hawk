@@ -140,6 +140,8 @@ public class StockDetailActivityFragment extends Fragment {
         // get the bounds from the max and min closing prices
         int upperBound = roundValueToMultiple(max, multiple, true);
         int lowerBound = roundValueToMultiple(min, multiple, false);
+        // get the interval between the extremes to calculate step value
+        int step = (int) Math.ceil((max - min) / 5);
         // hide progress bar on the UI thread
         mChartProgressBar.post(new Runnable() {
             @Override
@@ -147,7 +149,7 @@ public class StockDetailActivityFragment extends Fragment {
                 mChartProgressBar.setVisibility(View.GONE);
             }
         });
-        displayChartWithData(dataSet, lowerBound, upperBound);
+        displayChartWithData(dataSet, lowerBound, upperBound, step);
     }
 
     /**
@@ -168,12 +170,12 @@ public class StockDetailActivityFragment extends Fragment {
      * @param lowerBound Minimum value shown on the Y axis
      * @param upperBound Maximum value shown on the Y axis
      */
-    private void displayChartWithData(LineSet dataSet, int lowerBound, int upperBound) {
+    private void displayChartWithData(LineSet dataSet, int lowerBound, int upperBound, int step) {
         // add the data and set any visual appearance
         // only access resources if the fragment is attached to prevent illegal state exception
         if (isAdded()) dataSet.setColor(getResources().getColor(R.color.material_blue_700));
         mLineGraph.addData(dataSet);
-        mLineGraph.setAxisBorderValues(lowerBound, upperBound);
+        mLineGraph.setAxisBorderValues(lowerBound, upperBound, step);
         // add an animation to the chart, referenced from: http://stackoverflow.com/questions/36164123/animations-in-williamchart/38760291
         Animation animation = new Animation(500);
         animation.setEasing(new LinearEase());
