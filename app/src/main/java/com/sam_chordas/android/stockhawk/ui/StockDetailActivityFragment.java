@@ -122,24 +122,9 @@ public class StockDetailActivityFragment extends Fragment {
             if (close < min) min = close;
             if (close > max) max = close;
         }
-        int multiple;
-        // round the numbers to the nearest multiple of
-        if (max < 10) {
-            multiple = 1;
-        } else if (max < 50) {
-            multiple = 5;
-        } else if (max < 100) {
-            multiple = 10;
-        } else if (max < 200) {
-            multiple = 20;
-        } else if (max < 400) {
-            multiple = 50;
-        } else {
-            multiple = 100;
-        }
-        // get the bounds from the max and min closing prices
-        int upperBound = roundValueToMultiple(max, multiple, true);
-        int lowerBound = roundValueToMultiple(min, multiple, false);
+        // set the bounds to the rounded min and max values
+        int upperBound = (int) Math.ceil(max / 1);
+        int lowerBound = (int) Math.floor(min / 1);
         // get the interval between the extremes to calculate step value
         int step = (int) Math.ceil((max - min) / 5);
         // hide progress bar on the UI thread
@@ -150,18 +135,6 @@ public class StockDetailActivityFragment extends Fragment {
             }
         });
         displayChartWithData(dataSet, lowerBound, upperBound, step);
-    }
-
-    /**
-     * Round a number according to the multiple to the nearest multiple
-     * @param value The number to be rounded
-     * @param multiple Nearest multiple to be rounded to
-     * @param roundUp true if the number should be rounded up, false if down
-     * @return
-     */
-    public int roundValueToMultiple(float value, int multiple, boolean roundUp) {
-        int multiplyBy = roundUp ? multiple + 1 : multiple;
-        return (int) Math.floor((double) value / multiple) * multiplyBy;
     }
 
     /**
