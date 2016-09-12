@@ -13,6 +13,9 @@ public class StockDetailActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = StockDetailActivity.class.getSimpleName();
 
+    // URI for a symbol in the content provider
+    public static final String DETAIL_URI = "uri";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

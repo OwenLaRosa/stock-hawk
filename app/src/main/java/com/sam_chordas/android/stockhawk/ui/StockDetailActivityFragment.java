@@ -40,6 +40,7 @@ public class StockDetailActivityFragment extends Fragment {
     private static final String LOG_TAG = StockDetailActivityFragment.class.getSimpleName();
 
     private OkHttpClient mClient = new OkHttpClient();
+    private Uri mUri;
 
     private LineChartView mLineGraph;
     private ProgressBar mChartProgressBar;
@@ -53,6 +54,12 @@ public class StockDetailActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_stock_detail, container, false);
+
+        Intent intent = getActivity().getIntent();
+        if (null != intent && intent.hasExtra(StockDetailActivity.DETAIL_URI)) {
+            mUri = (Uri) intent.getParcelableExtra(StockDetailActivity.DETAIL_URI);
+        }
+
         mLineGraph = (LineChartView) rootView.findViewById(R.id.line_graph);
         mChartProgressBar = (ProgressBar) rootView.findViewById(R.id.chart_progress_bar);
         mChartSegmentedButton = (SegmentedButton) rootView.findViewById(R.id.chart_segmented_button);
