@@ -2,9 +2,14 @@ package com.sam_chordas.android.stockhawk.ui;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -35,9 +40,11 @@ import java.util.ArrayList;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class StockDetailActivityFragment extends Fragment {
+public class StockDetailActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String LOG_TAG = StockDetailActivityFragment.class.getSimpleName();
+
+    private static final int LOADER_ID = 0;
 
     private OkHttpClient mClient = new OkHttpClient();
     private Uri mUri;
@@ -93,6 +100,12 @@ public class StockDetailActivityFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((AppCompatActivity)getActivity()).getSupportLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     private void initSegmentedButton() {
@@ -216,4 +229,25 @@ public class StockDetailActivityFragment extends Fragment {
         });
     }
 
+    // method related to the cursor loader
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        if (null != mUri) {
+            return new CursorLoader(getActivity(), mUri, null, null, null, null);
+        }
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (!data.moveToFirst()) return;
+
+        Log.d(LOG_TAG, "Symbol is " + data.getString(data.getColumnIndex("symbol")));
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        // do nothing
+    }
 }
