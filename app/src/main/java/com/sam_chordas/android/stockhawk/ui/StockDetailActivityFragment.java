@@ -87,18 +87,6 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
                     }
                 }));
 
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    getGraphData();
-                    getCompanyNews();
-                } catch (IOException e) {
-                    Log.d(LOG_TAG, "Failed to download historical data" + e.toString());
-                }
-            }
-        });
-
         return rootView;
     }
 
@@ -130,11 +118,11 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
     }
 
     // this should be moved outside the fragment
-    private void getGraphData() throws IOException {
+    private void getGraphData(String symbol) throws IOException {
         // create a request, use hardcoded symbol to fetch data for now
         // URL referenced from https://discussions.udacity.com/t/plotting-the-stock-price-over-time-within-the-stock-hawk-project/159569/8
         mChartProgressBar.setVisibility(View.VISIBLE);
-        Request request = new Request.Builder().url("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.historicaldata%20where%20symbol%20%3D%20%22YHOO%22%20and%20startDate%20%3D%20%222009-09-11%22%20and%20endDate%20%3D%20%222010-03-10%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys").build();
+        Request request = new Request.Builder().url("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.historicaldata%20where%20symbol%20%3D%20%22" + symbol + "%22%20and%20startDate%20%3D%20%222009-09-11%22%20and%20endDate%20%3D%20%222010-03-10%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys").build();
         Response response = mClient.newCall(request).execute();
         String result = response.body().string();
         try {
@@ -198,8 +186,8 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         mLineGraph.show(animation);
     }
 
-    private void getCompanyNews() throws IOException {
-        Request request = new Request.Builder().url("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20rss%20where%20url%3D%22http%3A%2F%2Ffinance.yahoo.com%2Frss%2Fheadline%3Fs%3Dgoog%22&format=json&diagnostics=true&callback=").build();
+    private void getCompanyNews(String symbol) throws IOException {
+        Request request = new Request.Builder().url("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20rss%20where%20url%3D%22http%3A%2F%2Ffinance.yahoo.com%2Frss%2Fheadline%3Fs%3D" + symbol + "%22&format=json&diagnostics=true&callback=").build();
         Response response = mClient.newCall(request).execute();
         String result = response.body().string();
         try {
@@ -243,7 +231,18 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (!data.moveToFirst()) return;
 
-        Log.d(LOG_TAG, "Symbol is " + data.getString(data.getColumnIndex("symbol")));
+        final String symbol = data.getString(data.getColumnIndex("symbol"));
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getGraphData(symbol);
+                    getCompanyNews(symbol);
+                } catch (IOException e) {
+                    Log.d(LOG_TAG, "Failed to download historical data" + e.toString());
+                }
+            }
+        });
     }
 
     @Override
