@@ -50,6 +50,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
 
     private OkHttpClient mClient = new OkHttpClient();
     private Uri mUri;
+    private String mSymbol;
 
     private LineChartView mLineGraph;
     private ProgressBar mChartProgressBar;
@@ -241,6 +242,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         if (!data.moveToFirst()) return;
 
         final String symbol = data.getString(data.getColumnIndex("symbol"));
+        mSymbol = symbol;
         String price = data.getString(data.getColumnIndex("bid_price"));
         String percentChange = data.getString(data.getColumnIndex("percent_change"));
         mSymbolTextView.setText(price);
