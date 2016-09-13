@@ -30,12 +30,8 @@ import com.sam_chordas.android.stockhawk.rest.NewsAdapter;
 import com.sam_chordas.android.stockhawk.rest.RecyclerViewItemClickListener;
 import com.sam_chordas.android.stockhawk.rest.StockClient;
 import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -169,6 +165,24 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         }
     }
 
+    private void getCompanyNews() {
+        final ArrayList<Article> articles = new ArrayList<Article>();
+        try {
+            articles.addAll(stockClient.getNewsForStock(mSymbol));
+        } catch (IOException e) {
+
+        } catch (JSONException e) {
+
+        } finally {
+            getView().post(new Runnable() {
+                @Override
+                public void run() {
+                    ((NewsAdapter) mRecyclerView.getAdapter()).addAllArticles(articles);
+                }
+            });
+        }
+    }
+
     /**
      * Set the chart's data, set appearance, add animation, and display it onscreen
      * @param dataSet Points to be displayed on the graph
@@ -185,37 +199,6 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         Animation animation = new Animation(500);
         animation.setEasing(new LinearEase());
         mLineGraph.show(animation);
-    }
-
-    private void getCompanyNews(String symbol) throws IOException {
-        Request request = new Request.Builder().url("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20rss%20where%20url%3D%22http%3A%2F%2Ffinance.yahoo.com%2Frss%2Fheadline%3Fs%3D" + symbol + "%22&format=json&diagnostics=true&callback=").build();
-        Response response = mClient.newCall(request).execute();
-        String result = response.body().string();
-        try {
-            showNewsInList(result);
-        } catch (JSONException e) {}
-    }
-
-    private void showNewsInList(String json) throws JSONException {
-        JSONObject rootObject = new JSONObject(json);
-        JSONObject query = rootObject.getJSONObject("query");
-        JSONObject results = query.getJSONObject("results");
-        JSONArray articles = results.getJSONArray("item");
-        final ArrayList<Article> articleObjects = new ArrayList<Article>();
-        for (int i = 0; i < articles.length(); i++) {
-            // create an article object for each item
-            String title = articles.getJSONObject(i).getString("title");
-            String link = articles.getJSONObject(i).getString("link");
-            Article newArticle = new Article(title, link);
-            articleObjects.add(newArticle);
-        }
-        // add articles to adapter and update UI on main thread
-        mRecyclerView.post(new Runnable() {
-            @Override
-            public void run() {
-                ((NewsAdapter) mRecyclerView.getAdapter()).addAllArticles(articleObjects);
-            }
-        });
     }
 
     // method related to the cursor loader
@@ -249,12 +232,8 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                try {
-                    getGraphData();
-                    getCompanyNews(symbol);
-                } catch (IOException e) {
-                    Log.d(LOG_TAG, "Failed to download historical data" + e.toString());
-                }
+                getGraphData();
+                getCompanyNews();
             }
         });
     }

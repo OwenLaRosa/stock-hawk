@@ -1,5 +1,6 @@
 package com.sam_chordas.android.stockhawk.rest;
 
+import com.sam_chordas.android.stockhawk.info.Article;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -9,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by Owen LaRosa on 9/13/16.
@@ -40,6 +42,26 @@ public class StockClient {
             dataSet[i] = close;
         }
         return dataSet;
+    }
+
+    public ArrayList<Article> getNewsForStock(String symbol) throws IOException, JSONException {
+        Request request = new Request.Builder().url("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20rss%20where%20url%3D%22http%3A%2F%2Ffinance.yahoo.com%2Frss%2Fheadline%3Fs%3D" + symbol + "%22&format=json&diagnostics=true&callback=").build();
+        Response response = mClient.newCall(request).execute();
+        String result = response.body().string();
+        // parse the result
+        JSONObject rootObject = new JSONObject(result);
+        JSONObject query = rootObject.getJSONObject("query");
+        JSONObject results = query.getJSONObject("results");
+        JSONArray articles = results.getJSONArray("item");
+        final ArrayList<Article> articleObjects = new ArrayList<Article>();
+        for (int i = 0; i < articles.length(); i++) {
+            // create an article object for each item
+            String title = articles.getJSONObject(i).getString("title");
+            String link = articles.getJSONObject(i).getString("link");
+            Article newArticle = new Article(title, link);
+            articleObjects.add(newArticle);
+        }
+        return articleObjects;
     }
 
 }
