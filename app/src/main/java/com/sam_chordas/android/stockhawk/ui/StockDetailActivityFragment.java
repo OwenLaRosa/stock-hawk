@@ -22,8 +22,6 @@ import android.widget.TextView;
 
 import com.db.chart.model.LineSet;
 import com.db.chart.view.LineChartView;
-import com.db.chart.view.animation.Animation;
-import com.db.chart.view.animation.easing.LinearEase;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.info.Article;
 import com.sam_chordas.android.stockhawk.rest.NewsAdapter;
@@ -109,24 +107,39 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         mChartSegmentedButton.addButtonWithTitle("1 Month", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(LOG_TAG, "1 month");
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        getGraphData(Utils.getFormattedOneMonthAgo());
+                    }
+                });
             }
         });
         mChartSegmentedButton.addButtonWithTitle("6 Months", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(LOG_TAG, "6 months");
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        getGraphData(Utils.getFormattedSixMonthsAgo());
+                    }
+                });
             }
         });
         mChartSegmentedButton.addButtonWithTitle("1 Year", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(LOG_TAG, "1 year");
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        getGraphData(Utils.getFormattedOneYearAgo());
+                    }
+                });
             }
         });
     }
 
-    private void getGraphData() {
+    private void getGraphData(final String startDate) {
         float[] quotes = new float[0];
         Log.d(LOG_TAG, Utils.getFormattedToday());
         Log.d(LOG_TAG, Utils.getFormattedOneYearAgo());
@@ -196,12 +209,10 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         // add the data and set any visual appearance
         // only access resources if the fragment is attached to prevent illegal state exception
         if (isAdded()) dataSet.setColor(getResources().getColor(R.color.material_blue_700));
+        mLineGraph.dismiss();
         mLineGraph.addData(dataSet);
         mLineGraph.setAxisBorderValues(lowerBound, upperBound, step);
-        // add an animation to the chart, referenced from: http://stackoverflow.com/questions/36164123/animations-in-williamchart/38760291
-        Animation animation = new Animation(500);
-        animation.setEasing(new LinearEase());
-        mLineGraph.show(animation);
+        mLineGraph.show();
     }
 
     // method related to the cursor loader
@@ -235,7 +246,6 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                getGraphData();
                 getCompanyNews();
             }
         });
