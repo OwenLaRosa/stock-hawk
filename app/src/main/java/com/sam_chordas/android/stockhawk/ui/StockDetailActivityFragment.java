@@ -28,6 +28,7 @@ import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.info.Article;
 import com.sam_chordas.android.stockhawk.rest.NewsAdapter;
 import com.sam_chordas.android.stockhawk.rest.RecyclerViewItemClickListener;
+import com.sam_chordas.android.stockhawk.rest.StockClient;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -49,6 +50,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
     private static final int LOADER_ID = 0;
 
     private OkHttpClient mClient = new OkHttpClient();
+    private StockClient stockClient = new StockClient();
     private Uri mUri;
     private String mSymbol;
 
@@ -127,55 +129,44 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         });
     }
 
-    // this should be moved outside the fragment
-    private void getGraphData(String symbol) throws IOException {
-        // create a request, use hardcoded symbol to fetch data for now
-        // URL referenced from https://discussions.udacity.com/t/plotting-the-stock-price-over-time-within-the-stock-hawk-project/159569/8
-        mChartProgressBar.setVisibility(View.VISIBLE);
-        Request request = new Request.Builder().url("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.historicaldata%20where%20symbol%20%3D%20%22" + symbol + "%22%20and%20startDate%20%3D%20%222009-09-11%22%20and%20endDate%20%3D%20%222010-03-10%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys").build();
-        Response response = mClient.newCall(request).execute();
-        String result = response.body().string();
+    private void getGraphData() {
+        float[] quotes = new float[0];
         try {
-            showDataInGraph(result);
-        } catch (JSONException e) {}
-    }
+            quotes = stockClient.getHistoricalDataForStock(mSymbol);
+        } catch (IOException e) {
 
-    private void showDataInGraph(String json) throws JSONException {
-        JSONObject rootObject = new JSONObject(json);
-        JSONObject queryObject = rootObject.getJSONObject("query");
-        JSONObject resultsObject = queryObject.getJSONObject("results");
-        JSONArray quotes = resultsObject.getJSONArray("quote");
-        LineSet dataSet = new LineSet();
-        if (quotes.length() == 0) {
-            return;
-        }
-        // start with an initial value for minimum and maximum
-        // this is so we can adjust the bounds of the Y axis
-        float min = (float) quotes.getJSONObject(0).getDouble("Close");
-        float max = (float) quotes.getJSONObject(0).getDouble("Close");
-        for (int i = 0; i < quotes.length(); i++) {
-            JSONObject quote = quotes.getJSONObject(i);
-            float close = (float) quote.getDouble("Close");
-            Log.d(LOG_TAG, String.format("%g", close));
-            // no label for now
-            dataSet.addPoint("", close);
-            // update the upper and lower bounds if needed
-            if (close < min) min = close;
-            if (close > max) max = close;
-        }
-        // set the bounds to the rounded min and max values
-        int upperBound = (int) Math.ceil(max / 1);
-        int lowerBound = (int) Math.floor(min / 1);
-        // get the interval between the extremes to calculate step value
-        int step = (int) Math.ceil((max - min) / 5);
-        // hide progress bar on the UI thread
-        mChartProgressBar.post(new Runnable() {
-            @Override
-            public void run() {
-                mChartProgressBar.setVisibility(View.GONE);
+        } catch (JSONException e) {
+
+        } finally {
+            if (quotes.length == 0) {
+                // no data
+            } else {
+                final LineSet dataSet = new LineSet();
+                float min = quotes[0];
+                float max = quotes[0];
+                for (int i = 0; i < quotes.length; i++) {
+                    float close = quotes[i];
+                    // update the upper and lower bounds if needed
+                    if (close < min) min = close;
+                    if (close > max) max = close;
+                    // points should be unlabeled
+                    dataSet.addPoint("", quotes[i]);
+                }
+                // set the bounds to the rounded min and max values
+                final int upperBound = (int) Math.ceil(max / 1);
+                final int lowerBound = (int) Math.floor(min / 1);
+                // get the interval between the extremes to calculate step value
+                final int step = (int) Math.ceil((max - min) / 5);
+                // must be final in order to be used in runnable
+                getView().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mChartProgressBar.setVisibility(View.GONE);
+                        displayChartWithData(dataSet, lowerBound, upperBound, step);
+                    }
+                });
             }
-        });
-        displayChartWithData(dataSet, lowerBound, upperBound, step);
+        }
     }
 
     /**
@@ -259,7 +250,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
             @Override
             public void run() {
                 try {
-                    getGraphData(symbol);
+                    getGraphData();
                     getCompanyNews(symbol);
                 } catch (IOException e) {
                     Log.d(LOG_TAG, "Failed to download historical data" + e.toString());
