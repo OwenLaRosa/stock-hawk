@@ -16,7 +16,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.db.chart.model.LineSet;
 import com.db.chart.view.LineChartView;
@@ -53,6 +55,9 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
     private ProgressBar mChartProgressBar;
     private SegmentedButton mChartSegmentedButton;
     private RecyclerView mRecyclerView;
+    private ImageView mChangeImageView;
+    private TextView mSymbolTextView;
+    private TextView mPercentChangeTextView;
 
     public StockDetailActivityFragment() {
     }
@@ -86,6 +91,10 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
                         startActivity(intent);
                     }
                 }));
+
+        mChangeImageView = (ImageView) rootView.findViewById(R.id.change_image_view);
+        mSymbolTextView = (TextView) rootView.findViewById(R.id.symbol_text_view);
+        mPercentChangeTextView = (TextView) rootView.findViewById(R.id.percent_change_text_view);
 
         return rootView;
     }
@@ -232,6 +241,10 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         if (!data.moveToFirst()) return;
 
         final String symbol = data.getString(data.getColumnIndex("symbol"));
+        String percentChange = data.getString(data.getColumnIndex("percent_change"));
+        mSymbolTextView.setText(symbol);
+        mPercentChangeTextView.setText(percentChange);
+
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {

@@ -29,7 +29,8 @@
             android:textStyle="bold"
             android:textColor="@color/white"
             android:layout_marginRight="8dp"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginEnd="8dp"
+            android:textAllCaps="true"/>
 
         <TextView
             android:id="@+id/percent_change_text_view"
