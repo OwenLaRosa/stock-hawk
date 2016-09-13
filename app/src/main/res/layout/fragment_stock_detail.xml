@@ -4,14 +4,41 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
 
-        <!-- place holder for basic stock info -->
+        <ImageView
+            android:id="@+id/change_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="center"
+            android:adjustViewBounds="false"
+            android:maxWidth="@dimen/change_icon"
+            android:maxHeight="@dimen/change_icon"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"/>
 
-    </FrameLayout>
+        <TextView
+            android:id="@+id/symbol_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"/>
+
+        <TextView
+            android:id="@+id/percent_change_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="32sp"
+            android:textColor="@color/light_gray" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/chart_title_text_view"
