@@ -1,5 +1,7 @@
 package com.sam_chordas.android.stockhawk.rest;
 
+import android.util.Log;
+
 import com.sam_chordas.android.stockhawk.info.Article;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -22,10 +24,13 @@ public class StockClient {
 
     private OkHttpClient mClient = new OkHttpClient();
 
-    public float[] getHistoricalDataForStock(String symbol) throws IOException, JSONException {
-        // create a request, use hardcoded symbol to fetch data for now
+    public float[] getHistoricalDataForStock(String symbol, String startDate) throws IOException, JSONException {
+        // should be equal to today's date
+        String endDate = Utils.getFormattedToday();
+        // create a request, using the specified start and end dates
         // URL referenced from https://discussions.udacity.com/t/plotting-the-stock-price-over-time-within-the-stock-hawk-project/159569/8
-        Request request = new Request.Builder().url("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.historicaldata%20where%20symbol%20%3D%20%22" + symbol + "%22%20and%20startDate%20%3D%20%222009-09-11%22%20and%20endDate%20%3D%20%222010-03-10%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys").build();
+        Request request = new Request.Builder().url("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.historicaldata%20where%20symbol%20%3D%20%22" + symbol + "%22%20and%20startDate%20%3D%20%22" + startDate + "%22%20and%20endDate%20%3D%20%22" + endDate + "%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys").build();
+        Log.d(LOG_TAG, request.urlString());
         Response response = mClient.newCall(request).execute();
         String result = response.body().string();
         // after the download, parse the result

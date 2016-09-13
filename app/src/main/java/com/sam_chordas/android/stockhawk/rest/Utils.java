@@ -10,7 +10,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by sam_chordas on 10/8/15.
@@ -95,4 +98,38 @@ public class Utils {
         }
         return builder.build();
     }
+
+    // Date formatting methods
+    // referenced from http://stackoverflow.com/questions/16982056/how-to-get-the-date-7-days-earlier-date-from-current-date-in-java
+
+    public static String getFormattedToday() {
+        Date today = Calendar.getInstance().getTime();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormat.format(today);
+    }
+
+    public static String getFormattedOneMonthAgo() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -1);
+        Date today = calendar.getTime();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormat.format(today);
+    }
+
+    public static String getFormattedSixMonthsAgo() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -6);
+        Date today = calendar.getTime();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormat.format(today);
+    }
+
+    public static String getFormattedOneYearAgo() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, -1);
+        Date today = calendar.getTime();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormat.format(today);
+    }
+
 }

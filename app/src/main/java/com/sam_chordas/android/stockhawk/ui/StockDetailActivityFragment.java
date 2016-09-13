@@ -29,6 +29,7 @@ import com.sam_chordas.android.stockhawk.info.Article;
 import com.sam_chordas.android.stockhawk.rest.NewsAdapter;
 import com.sam_chordas.android.stockhawk.rest.RecyclerViewItemClickListener;
 import com.sam_chordas.android.stockhawk.rest.StockClient;
+import com.sam_chordas.android.stockhawk.rest.Utils;
 import com.squareup.okhttp.OkHttpClient;
 
 import org.json.JSONException;
@@ -127,8 +128,10 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
 
     private void getGraphData() {
         float[] quotes = new float[0];
+        Log.d(LOG_TAG, Utils.getFormattedToday());
+        Log.d(LOG_TAG, Utils.getFormattedOneYearAgo());
         try {
-            quotes = stockClient.getHistoricalDataForStock(mSymbol);
+            quotes = stockClient.getHistoricalDataForStock(mSymbol, Utils.getFormattedOneMonthAgo());
         } catch (IOException e) {
 
         } catch (JSONException e) {
