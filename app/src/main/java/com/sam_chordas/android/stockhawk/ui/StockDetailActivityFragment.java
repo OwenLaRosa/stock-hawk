@@ -93,7 +93,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
                 }));
 
         mChangeImageView = (ImageView) rootView.findViewById(R.id.change_image_view);
-        mSymbolTextView = (TextView) rootView.findViewById(R.id.symbol_text_view);
+        mSymbolTextView = (TextView) rootView.findViewById(R.id.price_text_view);
         mPercentChangeTextView = (TextView) rootView.findViewById(R.id.percent_change_text_view);
 
         return rootView;
@@ -241,9 +241,10 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         if (!data.moveToFirst()) return;
 
         final String symbol = data.getString(data.getColumnIndex("symbol"));
+        String price = data.getString(data.getColumnIndex("bid_price"));
         String percentChange = data.getString(data.getColumnIndex("percent_change"));
-        mSymbolTextView.setText(symbol);
-        mPercentChangeTextView.setText(percentChange);
+        mSymbolTextView.setText(price);
+        mPercentChangeTextView.setText("(" + percentChange + ")");
         if (percentChange.startsWith("-")) {
             // price is down, show a red arrow
             mChangeImageView.setImageResource(R.drawable.down_arrow);
