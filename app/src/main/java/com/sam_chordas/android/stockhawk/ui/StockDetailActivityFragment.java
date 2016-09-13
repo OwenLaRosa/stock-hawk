@@ -244,6 +244,13 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         String percentChange = data.getString(data.getColumnIndex("percent_change"));
         mSymbolTextView.setText(symbol);
         mPercentChangeTextView.setText(percentChange);
+        if (percentChange.startsWith("-")) {
+            // price is down, show a red arrow
+            mChangeImageView.setImageResource(R.drawable.down_arrow);
+        } else {
+            // price is up or even, show a green arrow
+            mChangeImageView.setImageResource(R.drawable.up_arrow);
+        }
 
         AsyncTask.execute(new Runnable() {
             @Override
