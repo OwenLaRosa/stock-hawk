@@ -25,6 +25,7 @@
             android:id="@+id/symbol_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:textSize="32sp"
             android:textStyle="bold"
             android:textColor="@color/white"
@@ -36,6 +37,7 @@
             android:id="@+id/percent_change_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:textSize="32sp"
             android:textColor="@color/light_gray" />
 
