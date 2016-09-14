@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -56,6 +57,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
     private ImageView mChangeImageView;
     private TextView mSymbolTextView;
     private TextView mPercentChangeTextView;
+    private Button mFirstButton;
 
     public StockDetailActivityFragment() {
     }
@@ -104,7 +106,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
     }
 
     private void initSegmentedButton() {
-        mChartSegmentedButton.addButtonWithTitle("1 Month", new View.OnClickListener() {
+        mFirstButton = mChartSegmentedButton.addButtonWithTitle("1 Month", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AsyncTask.execute(new Runnable() {
@@ -243,6 +245,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
             mChangeImageView.setImageResource(R.drawable.up_arrow);
         }
 
+        mFirstButton.callOnClick();
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
