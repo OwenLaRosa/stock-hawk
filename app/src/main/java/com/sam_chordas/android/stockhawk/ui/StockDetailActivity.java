@@ -1,5 +1,6 @@
 package com.sam_chordas.android.stockhawk.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
@@ -15,6 +16,8 @@ public class StockDetailActivity extends AppCompatActivity {
 
     // URI for a symbol in the content provider
     public static final String DETAIL_URI = "uri";
+
+    public static final String DETAIL_SYMBOL = "symbol";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,10 @@ public class StockDetailActivity extends AppCompatActivity {
 
     private void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(getString(R.string.title_activity_stock_detail));
+        Intent intent = getIntent();
+        if (null != intent && intent.hasExtra(DETAIL_SYMBOL)) {
+            actionBar.setTitle(intent.getStringExtra(DETAIL_SYMBOL).toUpperCase());
+        }
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 

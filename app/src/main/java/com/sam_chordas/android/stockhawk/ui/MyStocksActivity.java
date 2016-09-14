@@ -91,6 +91,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                         mCursor.moveToPosition(position);
                         Uri uri = QuoteProvider.Quotes.withSymbol(mCursor.getString(mCursor.getColumnIndex("symbol")));
                         detailIntent.putExtra(StockDetailActivity.DETAIL_URI, uri);
+                        String symbol = mCursor.getString(mCursor.getColumnIndex("symbol"));
+                        detailIntent.putExtra(StockDetailActivity.DETAIL_SYMBOL, symbol);
                         startActivity(detailIntent);
                     }
                 }));
