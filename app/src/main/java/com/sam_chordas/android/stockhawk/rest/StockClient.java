@@ -70,7 +70,7 @@ public class StockClient {
         return articleObjects;
     }
 
-    public JSONObject getStockSymbolForSearchTerm(String searchTerm) throws IOException, JSONException {
+    public JSONObject getStockForSearchTerm(String searchTerm) throws IOException, JSONException {
         Request request = new Request.Builder().url("http://d.yimg.com/autoc.finance.yahoo.com/autoc?query=" + URLEncoder.encode(searchTerm) +"&region=US&lang=en-us").build();
         Response response = mClient.newCall(request).execute();
         String responseBody = response.body().string();

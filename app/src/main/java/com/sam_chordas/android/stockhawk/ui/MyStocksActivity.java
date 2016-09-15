@@ -32,10 +32,15 @@ import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 import com.sam_chordas.android.stockhawk.rest.QuoteCursorAdapter;
 import com.sam_chordas.android.stockhawk.rest.RecyclerViewItemClickListener;
+import com.sam_chordas.android.stockhawk.rest.StockClient;
 import com.sam_chordas.android.stockhawk.rest.Utils;
 import com.sam_chordas.android.stockhawk.service.StockIntentService;
 import com.sam_chordas.android.stockhawk.service.StockTaskService;
 import com.sam_chordas.android.stockhawk.touch_helper.SimpleItemTouchHelperCallback;
+
+import org.json.JSONObject;
+
+import static android.R.id.input;
 
 public class MyStocksActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -54,6 +59,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     private Context mContext;
     private Cursor mCursor;
     boolean isConnected;
+
+    private StockClient mStockClient = new StockClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,10 +131,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                                         toast.show();
                                         return;
                                     } else {
-                                        // Add the stock to DB
-                                        mServiceIntent.putExtra("tag", "add");
-                                        mServiceIntent.putExtra("symbol", input.toString());
-                                        startService(mServiceIntent);
+                                        addStock((String) input);
                                     }
                                 }
                             })
@@ -231,6 +235,35 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mCursorAdapter.swapCursor(null);
+    }
+
+    private void addStock(String name) {
+        // get the stock if it exists
+        JSONObject stock = null;
+        try {
+            stock = mStockClient.getStockForSearchTerm(name);
+        } catch (Exception e) { // JSON or IO exception
+            Toast toast = Toast.makeText(MyStocksActivity.this, "Unable to add stock for \"" + name + "\"", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
+            toast.show();
+            return;
+        } finally {
+            if (stock == null) {
+                Toast toast = Toast.makeText(MyStocksActivity.this, "Can't find stock for query: \"" + (String) input + "\"", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
+                toast.show();
+                return;
+            } else {
+
+            }
+        }
+
+
+
+        // Add the stock to DB
+        //mServiceIntent.putExtra("tag", "add");
+        //mServiceIntent.putExtra("symbol", input.toString());
+        //startService(mServiceIntent);
     }
 
 }
