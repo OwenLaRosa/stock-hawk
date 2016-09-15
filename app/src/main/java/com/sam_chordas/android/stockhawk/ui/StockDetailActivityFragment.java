@@ -59,7 +59,17 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
     private TextView mPercentChangeTextView;
     private Button mFirstButton;
 
+    // Keys for saving the instance state
+
+    private static final String ARTICLES_KEY = "articles";
+
     public StockDetailActivityFragment() {
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(ARTICLES_KEY, ((NewsAdapter) mRecyclerView.getAdapter()).getAllArticles());
     }
 
     @Override
@@ -95,6 +105,13 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         mChangeImageView = (ImageView) rootView.findViewById(R.id.change_image_view);
         mSymbolTextView = (TextView) rootView.findViewById(R.id.price_text_view);
         mPercentChangeTextView = (TextView) rootView.findViewById(R.id.percent_change_text_view);
+
+        // restore the instance state
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(ARTICLES_KEY)) {
+                newsAdapter.addAllArticles((ArrayList<Article>) savedInstanceState.getSerializable(ARTICLES_KEY));
+            }
+        }
 
         return rootView;
     }
@@ -262,12 +279,15 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         }
 
         mFirstButton.callOnClick();
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                getCompanyNews();
-            }
-        });
+        // if data doesn't already exist, fetch news stories
+        if (mRecyclerView.getAdapter().getItemCount() == 0) {
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    getCompanyNews();
+                }
+            });
+        }
     }
 
     @Override

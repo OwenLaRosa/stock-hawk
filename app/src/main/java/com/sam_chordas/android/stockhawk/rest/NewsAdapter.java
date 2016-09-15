@@ -88,6 +88,14 @@ public class NewsAdapter extends RecyclerView.Adapter {
         return articles.get(index);
     }
 
+    /**
+     * Get an arraylist of article objects
+     * @return List of article objects contained in the adapter
+     */
+    public ArrayList<Article> getAllArticles() {
+        return articles;
+    }
+
     private static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public final TextView titleTextView;
