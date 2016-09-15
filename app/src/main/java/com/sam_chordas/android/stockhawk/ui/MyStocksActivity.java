@@ -40,8 +40,6 @@ import com.sam_chordas.android.stockhawk.touch_helper.SimpleItemTouchHelperCallb
 
 import org.json.JSONObject;
 
-import static android.R.id.input;
-
 public class MyStocksActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     /**
@@ -237,33 +235,31 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         mCursorAdapter.swapCursor(null);
     }
 
-    private void addStock(String name) {
+    private void addStock(final String name) {
         // get the stock if it exists
         JSONObject stock = null;
+        String symbol = "";
         try {
             stock = mStockClient.getStockForSearchTerm(name);
+            symbol = stock.getString("symbol");
         } catch (Exception e) { // JSON or IO exception
             Toast toast = Toast.makeText(MyStocksActivity.this, "Unable to add stock for \"" + name + "\"", Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
             toast.show();
             return;
         } finally {
-            if (stock == null) {
-                Toast toast = Toast.makeText(MyStocksActivity.this, "Can't find stock for query: \"" + (String) input + "\"", Toast.LENGTH_LONG);
+            if (stock == null && symbol != "") {
+                Toast toast = Toast.makeText(MyStocksActivity.this, "Can't find stock for query: \"" + name + "\"", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
                 toast.show();
                 return;
             } else {
-
+                // Add the stock to DB
+                mServiceIntent.putExtra("tag", "add");
+                mServiceIntent.putExtra("symbol", symbol);
+                startService(mServiceIntent);
             }
         }
-
-
-
-        // Add the stock to DB
-        //mServiceIntent.putExtra("tag", "add");
-        //mServiceIntent.putExtra("symbol", input.toString());
-        //startService(mServiceIntent);
     }
 
 }
