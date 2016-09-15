@@ -72,7 +72,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(ARTICLES_KEY, ((NewsAdapter) mRecyclerView.getAdapter()).getAllArticles());
+        outState.putParcelableArrayList(ARTICLES_KEY, ((NewsAdapter) mRecyclerView.getAdapter()).getAllArticles());
         outState.putFloatArray(DATA_SET_KEY, mQuotes);
     }
 
@@ -113,7 +113,8 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         // restore the instance state
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(ARTICLES_KEY)) {
-                newsAdapter.addAllArticles((ArrayList<Article>) savedInstanceState.getSerializable(ARTICLES_KEY));
+                ArrayList<Article> articles = savedInstanceState.getParcelableArrayList(ARTICLES_KEY);
+                newsAdapter.addAllArticles(articles);
             }
             if (savedInstanceState.containsKey(DATA_SET_KEY)) {
                 // quotes are retrieved now but are used in onLoadFinished
