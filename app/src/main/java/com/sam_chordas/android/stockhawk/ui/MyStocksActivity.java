@@ -271,6 +271,26 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                     }
                 });
             } else {
+
+                // check if the retrieved stock already exists
+                Cursor c = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
+                        new String[]{QuoteColumns.SYMBOL}, QuoteColumns.SYMBOL + "= ?",
+                        new String[]{symbol}, null);
+                if (c.getCount() != 0) {
+                    findViewById(android.R.id.content).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast toast =
+                                    Toast.makeText(MyStocksActivity.this, "This stock is already saved!",
+                                            Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
+                            toast.show();
+                            return;
+                        }
+                    });
+                    return;
+                }
+
                 // Add the stock to DB
                 mServiceIntent.putExtra("tag", "add");
                 mServiceIntent.putExtra("symbol", symbol);
