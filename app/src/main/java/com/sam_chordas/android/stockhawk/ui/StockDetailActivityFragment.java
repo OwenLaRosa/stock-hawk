@@ -166,11 +166,11 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
                     // points should be unlabeled
                     dataSet.addPoint("", quotes[i]);
                 }
+                // get an appropriate step value based on interval between the extremes
+                final int step = calculateSet(min, max);
                 // set the bounds to the rounded min and max values
-                final int upperBound = (int) Math.ceil(max / 1);
-                final int lowerBound = (int) Math.floor(min / 1);
-                // get the interval between the extremes to calculate step value
-                final int step = (int) Math.ceil((max - min) / 5);
+                final int upperBound = (int) Math.ceil(max / step) * step;
+                final int lowerBound = (int) Math.floor(min / step) * step;
                 // must be final in order to be used in runnable
                 getView().post(new Runnable() {
                     @Override
@@ -180,6 +180,21 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
                     }
                 });
             }
+        }
+    }
+
+    private int calculateSet(float min, float max) {
+        float difference = max - min;
+        if (difference < 5) {
+            return 1;
+        } else if (difference < 10) {
+            return 2;
+        } else if (difference < 25) {
+            return 5;
+        } else if (difference < 50) {
+            return 10;
+        } else {
+            return (int) Math.ceil(difference / 50) * 10;
         }
     }
 
@@ -210,6 +225,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
     private void displayChartWithData(LineSet dataSet, int lowerBound, int upperBound, int step) {
         // add the data and set any visual appearance
         // only access resources if the fragment is attached to prevent illegal state exception
+        Log.d(LOG_TAG, String.format("Min: %d, max: %d, step: %d", lowerBound, upperBound, step));
         if (isAdded()) dataSet.setColor(getResources().getColor(R.color.material_blue_700));
         mLineGraph.dismiss();
         mLineGraph.addData(dataSet);
