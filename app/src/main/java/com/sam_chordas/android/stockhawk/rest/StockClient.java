@@ -83,7 +83,7 @@ public class StockClient {
         // used to filter only stocks, exclude other types of assets
         ArrayList<JSONObject> equities = new ArrayList<JSONObject>();
         // try to favor U.S. equities, this could be localized depending on the user's location
-        String[] exchanges = {"NAS", "NYSE"};
+        String[] exchanges = {"NASDAQ", "NYSE"};
         for (int i = 0; i < results.length(); i++) {
             JSONObject result = results.getJSONObject(i);
             String typeDisp = result.getString("typeDisp");

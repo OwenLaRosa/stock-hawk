@@ -134,7 +134,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                                         AsyncTask.execute(new Runnable() {
                                             @Override
                                             public void run() {
-                                                addStock("t");
+                                                addStock(input.toString());
                                             }
                                         });
                                     }
