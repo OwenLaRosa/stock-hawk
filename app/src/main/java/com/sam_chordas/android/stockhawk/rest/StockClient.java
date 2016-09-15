@@ -102,7 +102,7 @@ public class StockClient {
                 return null;
             }
         }
-
+        return null;
     }
 
     /**
