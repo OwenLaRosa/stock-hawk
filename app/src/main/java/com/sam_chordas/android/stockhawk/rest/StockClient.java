@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -67,6 +68,56 @@ public class StockClient {
             articleObjects.add(newArticle);
         }
         return articleObjects;
+    }
+
+    public JSONObject getStockSymbolForSearchTerm(String searchTerm) throws IOException, JSONException {
+        Request request = new Request.Builder().url("http://d.yimg.com/autoc.finance.yahoo.com/autoc?query=" + URLEncoder.encode(searchTerm) +"&region=US&lang=en-us").build();
+        Response response = mClient.newCall(request).execute();
+        String responseBody = response.body().string();
+
+        JSONObject rootObject = new JSONObject(responseBody);
+        JSONObject resultSet = rootObject.getJSONObject("ResultSet");
+        JSONObject query = resultSet.getJSONObject("Query");
+        JSONArray results = query.getJSONArray("Result");
+
+        JSONObject stock;
+        for (int i = 0; i < results.length(); i++) {
+            JSONObject result = results.getJSONObject(i);
+            ArrayList<JSONObject> equities = new ArrayList<JSONObject>();
+            if (result.getString("typeDisp") == "Equity") {
+                equities.add(result);
+            }
+            // try to favor U.S. equities, this could be localized depending on the user's location
+            String[] exchanges = {"NAS", "NYSE"};
+            for (int j = 0; j < equities.size(); j++) {
+                if (arrayContains(exchanges, equities.get(j).getString("exchDisp"))) {
+                    return equities.get(i);
+                }
+            }
+            if (exchanges.length != 0) {
+                // get the most relevant result
+                return equities.get(0);
+            } else {
+                // null means that the search failed to return any relevant equities
+                return null;
+            }
+        }
+
+    }
+
+    /**
+     * Helper to determine if an array contains the given string
+     * @param array Strings to search
+     * @param value String to search for
+     * @return true if array contains the string, otherwise return false
+     */
+    private boolean arrayContains(String[] array, String value) {
+        for (int i = 0; i < array.length; i++) {
+            if (value == array[i]) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
