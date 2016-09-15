@@ -17,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -133,7 +134,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                                         AsyncTask.execute(new Runnable() {
                                             @Override
                                             public void run() {
-                                                addStock((String) input);
+                                                addStock("t");
                                             }
                                         });
                                     }
@@ -250,6 +251,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             symbol = stock.getString("symbol");
         } catch (Exception e) { // JSON or IO exception
             // update UI with error message on main thread
+            Log.e("", "Unable to add stock", e);
             findViewById(android.R.id.content).post(new Runnable() {
                 @Override
                 public void run() {

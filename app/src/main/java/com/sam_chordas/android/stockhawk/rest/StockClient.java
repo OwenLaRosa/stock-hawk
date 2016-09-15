@@ -77,32 +77,33 @@ public class StockClient {
 
         JSONObject rootObject = new JSONObject(responseBody);
         JSONObject resultSet = rootObject.getJSONObject("ResultSet");
-        JSONObject query = resultSet.getJSONObject("Query");
-        JSONArray results = query.getJSONArray("Result");
+        JSONArray results = resultSet.getJSONArray("Result");
 
         JSONObject stock;
+        // used to filter only stocks, exclude other types of assets
+        ArrayList<JSONObject> equities = new ArrayList<JSONObject>();
+        // try to favor U.S. equities, this could be localized depending on the user's location
+        String[] exchanges = {"NAS", "NYSE"};
         for (int i = 0; i < results.length(); i++) {
             JSONObject result = results.getJSONObject(i);
-            ArrayList<JSONObject> equities = new ArrayList<JSONObject>();
-            if (result.getString("typeDisp") == "Equity") {
+            String typeDisp = result.getString("typeDisp");
+            if (result.getString("typeDisp").equals("Equity")) {
                 equities.add(result);
             }
-            // try to favor U.S. equities, this could be localized depending on the user's location
-            String[] exchanges = {"NAS", "NYSE"};
-            for (int j = 0; j < equities.size(); j++) {
-                if (arrayContains(exchanges, equities.get(j).getString("exchDisp"))) {
-                    return equities.get(i);
-                }
-            }
-            if (exchanges.length != 0) {
-                // get the most relevant result
-                return equities.get(0);
-            } else {
-                // null means that the search failed to return any relevant equities
-                return null;
+        }
+        for (int i = 0; i < equities.size(); i++) {
+            if (arrayContains(exchanges, equities.get(i).getString("exchDisp"))) {
+                return equities.get(i);
             }
         }
-        return null;
+        // in case there are any non-US equities
+        if (equities.size() != 0) {
+            // get the most relevant result
+            return equities.get(0);
+        } else {
+            // null means that the search failed to return any relevant equities
+            return null;
+        }
     }
 
     /**
@@ -113,7 +114,7 @@ public class StockClient {
      */
     private boolean arrayContains(String[] array, String value) {
         for (int i = 0; i < array.length; i++) {
-            if (value == array[i]) {
+            if (value.equals(array[i])) {
                 return true;
             }
         }
