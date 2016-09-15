@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -115,7 +116,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                             .inputType(InputType.TYPE_CLASS_TEXT)
                             .input(R.string.input_hint, R.string.input_prefill, new MaterialDialog.InputCallback() {
                                 @Override
-                                public void onInput(MaterialDialog dialog, CharSequence input) {
+                                public void onInput(MaterialDialog dialog, final CharSequence input) {
                                     // On FAB click, receive user input. Make sure the stock doesn't already exist
                                     // in the DB and proceed accordingly
                                     Cursor c = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
@@ -129,7 +130,12 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                                         toast.show();
                                         return;
                                     } else {
-                                        addStock((String) input);
+                                        AsyncTask.execute(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                addStock((String) input);
+                                            }
+                                        });
                                     }
                                 }
                             })
@@ -243,16 +249,25 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             stock = mStockClient.getStockForSearchTerm(name);
             symbol = stock.getString("symbol");
         } catch (Exception e) { // JSON or IO exception
-            Toast toast = Toast.makeText(MyStocksActivity.this, "Unable to add stock for \"" + name + "\"", Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
-            toast.show();
-            return;
+            // update UI with error message on main thread
+            findViewById(android.R.id.content).post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast toast = Toast.makeText(MyStocksActivity.this, "Unable to add stock for \"" + name + "\"", Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
+                    toast.show();
+                }
+            });
         } finally {
             if (stock == null && symbol != "") {
-                Toast toast = Toast.makeText(MyStocksActivity.this, "Can't find stock for query: \"" + name + "\"", Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
-                toast.show();
-                return;
+                findViewById(android.R.id.content).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast toast = Toast.makeText(MyStocksActivity.this, "Can't find stock for query: \"" + name + "\"", Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
+                        toast.show();
+                    }
+                });
             } else {
                 // Add the stock to DB
                 mServiceIntent.putExtra("tag", "add");
