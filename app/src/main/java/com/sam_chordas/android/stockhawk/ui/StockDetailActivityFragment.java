@@ -49,6 +49,8 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
     private StockClient stockClient = new StockClient();
     private Uri mUri;
     private String mSymbol;
+    // quotes used by the graph's data set
+    private float[] mQuotes = new float[0];
 
     private LineChartView mLineGraph;
     private ProgressBar mChartProgressBar;
@@ -62,6 +64,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
     // Keys for saving the instance state
 
     private static final String ARTICLES_KEY = "articles";
+    private static final String DATA_SET_KEY = "dataSet";
 
     public StockDetailActivityFragment() {
     }
@@ -70,6 +73,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(ARTICLES_KEY, ((NewsAdapter) mRecyclerView.getAdapter()).getAllArticles());
+        outState.putFloatArray(DATA_SET_KEY, mQuotes);
     }
 
     @Override
@@ -110,6 +114,11 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(ARTICLES_KEY)) {
                 newsAdapter.addAllArticles((ArrayList<Article>) savedInstanceState.getSerializable(ARTICLES_KEY));
+            }
+            if (savedInstanceState.containsKey(DATA_SET_KEY)) {
+                // quotes are retrieved now but are used in onLoadFinished
+                // this ensures the view exists to update the UI, preventing null pointer exception
+                mQuotes = savedInstanceState.getFloatArray(DATA_SET_KEY);
             }
         }
 
@@ -169,34 +178,51 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         } catch (JSONException e) {
 
         } finally {
-            if (quotes.length == 0) {
-                // no data
-            } else {
-                final LineSet dataSet = new LineSet();
-                float min = quotes[0];
-                float max = quotes[0];
-                for (int i = 0; i < quotes.length; i++) {
-                    float close = quotes[i];
-                    // update the upper and lower bounds if needed
-                    if (close < min) min = close;
-                    if (close > max) max = close;
-                    // points should be unlabeled
-                    dataSet.addPoint("", quotes[i]);
-                }
-                // get an appropriate step value based on interval between the extremes
-                final int step = calculateSet(min, max);
-                // set the bounds to the rounded min and max values
-                final int upperBound = (int) Math.ceil(max / step) * step;
-                final int lowerBound = (int) Math.floor(min / step) * step;
-                // must be final in order to be used in runnable
-                getView().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mChartProgressBar.setVisibility(View.GONE);
-                        displayChartWithData(dataSet, lowerBound, upperBound, step);
-                    }
-                });
+            displayChartWithQuotes(quotes);
+        }
+    }
+
+    /**
+     * Populates the chart using the given quotes
+     * @param quotes Stock prices to display on the graph
+     */
+    private void displayChartWithQuotes(float[] quotes) {
+        // store the quptes globally so they can be stored later
+        mQuotes = quotes;
+        if (quotes.length == 0) {
+            // no data
+        } else {
+            final LineSet dataSet = new LineSet();
+            float min = quotes[0];
+            float max = quotes[0];
+            for (int i = 0; i < quotes.length; i++) {
+                float close = quotes[i];
+                // update the upper and lower bounds if needed
+                if (close < min) min = close;
+                if (close > max) max = close;
+                // points should be unlabeled
+                dataSet.addPoint("", quotes[i]);
             }
+            // get an appropriate step value based on interval between the extremes
+            final int step = calculateSet(min, max);
+            // set the bounds to the rounded min and max values
+            final int upperBound = (int) Math.ceil(max / step) * step;
+            final int lowerBound = (int) Math.floor(min / step) * step;
+            // must be final in order to be used in runnable
+            getView().post(new Runnable() {
+                @Override
+                public void run() {
+                    mChartProgressBar.setVisibility(View.GONE);
+                    // add the data and set any visual appearance
+                    // only access resources if the fragment is attached to prevent illegal state exception
+                    Log.d(LOG_TAG, String.format("Min: %d, max: %d, step: %d", lowerBound, upperBound, step));
+                    if (isAdded()) dataSet.setColor(getResources().getColor(R.color.material_blue_700));
+                    mLineGraph.dismiss();
+                    mLineGraph.addData(dataSet);
+                    mLineGraph.setAxisBorderValues(lowerBound, upperBound, step);
+                    mLineGraph.show();
+                }
+            });
         }
     }
 
@@ -233,23 +259,6 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         }
     }
 
-    /**
-     * Set the chart's data, set appearance, add animation, and display it onscreen
-     * @param dataSet Points to be displayed on the graph
-     * @param lowerBound Minimum value shown on the Y axis
-     * @param upperBound Maximum value shown on the Y axis
-     */
-    private void displayChartWithData(LineSet dataSet, int lowerBound, int upperBound, int step) {
-        // add the data and set any visual appearance
-        // only access resources if the fragment is attached to prevent illegal state exception
-        Log.d(LOG_TAG, String.format("Min: %d, max: %d, step: %d", lowerBound, upperBound, step));
-        if (isAdded()) dataSet.setColor(getResources().getColor(R.color.material_blue_700));
-        mLineGraph.dismiss();
-        mLineGraph.addData(dataSet);
-        mLineGraph.setAxisBorderValues(lowerBound, upperBound, step);
-        mLineGraph.show();
-    }
-
     // method related to the cursor loader
 
     @Override
@@ -278,7 +287,13 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
             mChangeImageView.setImageResource(R.drawable.up_arrow);
         }
 
-        mFirstButton.callOnClick();
+        if (mQuotes.length == 0) {
+            // first time, initiate the download
+            mFirstButton.callOnClick();
+        } else {
+            // instance restored, get the old quotes
+            displayChartWithQuotes(mQuotes);
+        }
         // if data doesn't already exist, fetch news stories
         if (mRecyclerView.getAdapter().getItemCount() == 0) {
             AsyncTask.execute(new Runnable() {
