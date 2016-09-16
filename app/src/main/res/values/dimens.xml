@@ -8,4 +8,15 @@
     <dimen name="navigation_drawer_width">240dp</dimen>
     
     <dimen name="change_icon">32dp</dimen>
+
+    <!-- dimensions for list widget -->
+
+    <dimen name="widget_margin">8dp</dimen>
+    <dimen name="widget_list_default_width">250dp</dimen>
+    <dimen name="widget_list_default_height">180dp</dimen>
+    <dimen name="widget_list_min_resize_width">220dp</dimen>
+    <dimen name="widget_list_min_resize_height">@dimen/widget_list_default_height</dimen>
+    <dimen name="stocks_widget_text_size">24dp</dimen>
+    <dimen name="stocks_widget_text_width">38dp</dimen>
+
 </resources>
