@@ -118,6 +118,13 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                             .input(R.string.input_hint, R.string.input_prefill, new MaterialDialog.InputCallback() {
                                 @Override
                                 public void onInput(MaterialDialog dialog, final CharSequence input) {
+                                    // check for invalid input
+                                    // if empty, then don't call the server
+                                    if (input.toString().equals("")) {
+                                        Toast toast = Toast.makeText(MyStocksActivity.this, "Please enter a company name or symbol.", Toast.LENGTH_LONG);
+                                        toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
+                                        toast.show();
+                                    }
                                     // On FAB click, receive user input. Make sure the stock doesn't already exist
                                     // in the DB and proceed accordingly
                                     Cursor c = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
