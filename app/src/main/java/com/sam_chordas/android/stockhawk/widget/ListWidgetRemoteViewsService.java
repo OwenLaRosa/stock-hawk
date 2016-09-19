@@ -8,6 +8,7 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.sam_chordas.android.stockhawk.R;
+import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 
 /**
@@ -37,8 +38,8 @@ public class ListWidgetRemoteViewsService extends RemoteViewsService {
                 final long identityToken = Binder.clearCallingIdentity();
                 data = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
                         null,
-                        null,
-                        null,
+                        QuoteColumns.ISCURRENT + " = ?",
+                        new String[]{"1"},
                         null);
                 Binder.restoreCallingIdentity(identityToken);
             }
@@ -53,6 +54,7 @@ public class ListWidgetRemoteViewsService extends RemoteViewsService {
 
             @Override
             public int getCount() {
+                int count = data == null ? 0 : data.getCount();
                 return data == null ? 0 : data.getCount();
             }
 
