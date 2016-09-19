@@ -1,14 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:columnCount="3">
 
     <TextView
         android:id="@+id/widget_symbol_text_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_margin="8dp"
-        android:textSize="@dimen/stocks_widget_text_size"/>
+        android:textSize="@dimen/stocks_widget_text_size"
+        android:gravity="start"
+        android:textAlignment="viewStart"
+        android:layout_column="0"
+        android:layout_columnWeight="1"/>
 
-</LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        android:textSize="@dimen/stocks_widget_text_size"
+        android:layout_column="1"/>
+
+    <TextView
+        android:id="@+id/widget_price_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        android:gravity="end"
+        android:textAlignment="viewEnd"
+        android:textSize="@dimen/stocks_widget_text_size"
+        android:layout_column="2" />
+
+</GridLayout>

@@ -64,8 +64,12 @@ public class ListWidgetRemoteViewsService extends RemoteViewsService {
                     return null;
                 }
                 RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.widget_list_item);
-                String symbol = data.getString(data.getColumnIndex("symbol"));
+                String symbol = data.getString(data.getColumnIndex(QuoteColumns.SYMBOL));
+                int isUp = (int) data.getInt(data.getColumnIndex(QuoteColumns.ISUP));
+                String price = data.getString(data.getColumnIndex(QuoteColumns.BIDPRICE));
+                String priceText = (isUp == 1 ? "▲ " : "▼ ") +  price;
                 remoteViews.setTextViewText(R.id.widget_symbol_text_view, symbol);
+                remoteViews.setTextViewText(R.id.widget_price_text_view, priceText);
 
                 return remoteViews;
             }
