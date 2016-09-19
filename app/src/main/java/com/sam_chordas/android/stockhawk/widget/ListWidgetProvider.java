@@ -2,6 +2,7 @@ package com.sam_chordas.android.stockhawk.widget;
 
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
@@ -14,12 +15,13 @@ import android.widget.RemoteViews;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.service.StockTaskService;
 import com.sam_chordas.android.stockhawk.ui.MyStocksActivity;
+import com.sam_chordas.android.stockhawk.ui.StockDetailActivity;
 
 /**
  * Created by Owen LaRosa on 9/16/16.
  */
 
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class ListWidgetProvider extends AppWidgetProvider {
 
     @Override
@@ -30,9 +32,17 @@ public class ListWidgetProvider extends AppWidgetProvider {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_list);
 
             // launch the main activity when user taps icon
-            Intent intent = new Intent(context, MyStocksActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-            remoteViews.setOnClickPendingIntent(R.id.widget, pendingIntent);
+            Intent launchAppIntent = new Intent(context, MyStocksActivity.class);
+            PendingIntent appPendingIntent = PendingIntent.getActivity(context, 0, launchAppIntent, 0);
+            remoteViews.setOnClickPendingIntent(R.id.widget, appPendingIntent);
+
+            // launch detail activity when user taps specifc stock
+            Intent launchDetailIntent = new Intent(context, StockDetailActivity.class);
+            PendingIntent detailPendingIntent = TaskStackBuilder.create(context)
+                    .addNextIntentWithParentStack(launchDetailIntent)
+                    .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            remoteViews.setPendingIntentTemplate(R.id.widget_list, detailPendingIntent);
+            remoteViews.setEmptyView(R.id.widget_list, R.id.widget_empty);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
                 setRemoteAdapter(context, remoteViews);
