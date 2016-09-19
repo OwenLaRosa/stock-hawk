@@ -16,6 +16,7 @@
         android:layout_columnWeight="1"/>
 
     <TextView
+        android:id="@+id/widget_updown_text_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_margin="8dp"
@@ -24,7 +25,7 @@
 
     <TextView
         android:id="@+id/widget_price_text_view"
-        android:layout_width="wrap_content"
+        android:layout_width="72dp"
         android:layout_height="match_parent"
         android:layout_margin="8dp"
         android:gravity="end"
