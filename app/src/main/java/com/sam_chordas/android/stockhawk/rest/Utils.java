@@ -84,6 +84,8 @@ public class Utils {
             builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString("symbol"));
             builder.withValue(QuoteColumns.NAME, jsonObject.getString("Name"));
             builder.withValue(QuoteColumns.BIDPRICE, truncateBidPrice(jsonObject.getString("Bid")));
+            builder.withValue(QuoteColumns.HIGH_PRICE, truncateBidPrice(jsonObject.getString("DaysHigh")));
+            builder.withValue(QuoteColumns.LOW_PRICE, truncateBidPrice(jsonObject.getString("DaysLow")));
             builder.withValue(QuoteColumns.PERCENT_CHANGE, truncateChange(
                     jsonObject.getString("ChangeinPercent"), true));
             builder.withValue(QuoteColumns.CHANGE, truncateChange(change, false));

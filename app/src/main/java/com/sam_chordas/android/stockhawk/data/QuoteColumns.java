@@ -29,6 +29,12 @@ public class QuoteColumns {
     @NotNull
     public static final String BIDPRICE = "bid_price";
     @DataType(DataType.Type.TEXT)
+    @NotNull
+    public static final String HIGH_PRICE = "high_price";
+    @DataType(DataType.Type.TEXT)
+    @NotNull
+    public static final String LOW_PRICE = "low_price";
+    @DataType(DataType.Type.TEXT)
     public static final String CREATED = "created";
     @DataType(DataType.Type.INTEGER)
     @NotNull
