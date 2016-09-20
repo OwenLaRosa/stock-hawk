@@ -278,7 +278,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         mSymbol = symbol;
         String price = data.getString(data.getColumnIndex("bid_price"));
         String percentChange = data.getString(data.getColumnIndex("percent_change"));
-        mPriceTextView.setText(price);
+        mPriceTextView.setText(getString(R.string.currency_symbol, price));
         mPercentChangeTextView.setText("(" + percentChange + ")");
         if (percentChange.startsWith("-")) {
             // price is down, show a red arrow

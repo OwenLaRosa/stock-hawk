@@ -24,6 +24,10 @@
     <string name="add_stock_failed">Unable to add stock for query: \"<xliff:g id="symbol">%1$s</xliff:g>\"</string>
     <string name="find_stock_failed">Can\'t find stock for \"<xliff:g id="query">%1$s</xliff:g>\"</string>
 
+    <!-- Displaying money amounts -->
+
+    <string name="currency_symbol" translatable="false">$<xliff:g id="currency">%1$s</xliff:g></string>
+
     <!-- filtering historical data by date -->
 
     <string name="filter_one_month">1 Month</string>
@@ -31,7 +35,7 @@
     <string name="filter_one_year">1 Year</string>
 
     <!-- Network error messages -->
-    
+
     <string name="network_toast">Uh-oh! This app requires an internet connection</string>
 
     <!-- Deprecated: Customize the title for the stock displayed -->

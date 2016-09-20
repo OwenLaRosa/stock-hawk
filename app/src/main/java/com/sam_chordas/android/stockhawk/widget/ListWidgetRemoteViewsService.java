@@ -68,7 +68,7 @@ public class ListWidgetRemoteViewsService extends RemoteViewsService {
                 int isUp = (int) data.getInt(data.getColumnIndex(QuoteColumns.ISUP));
                 String price = data.getString(data.getColumnIndex(QuoteColumns.BIDPRICE));
                 remoteViews.setTextViewText(R.id.widget_symbol_text_view, symbol);
-                remoteViews.setTextViewText(R.id.widget_price_text_view, price);
+                remoteViews.setTextViewText(R.id.widget_price_text_view, getString(R.string.currency_symbol, price));
                 remoteViews.setTextViewText(R.id.widget_updown_text_view, isUp == 1 ? "▲" : "▼");
 
                 return remoteViews;
