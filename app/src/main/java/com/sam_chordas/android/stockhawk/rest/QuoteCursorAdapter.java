@@ -1,6 +1,7 @@
 package com.sam_chordas.android.stockhawk.rest;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -48,7 +49,17 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final Cursor cursor) {
-        viewHolder.symbol.setText(cursor.getString(cursor.getColumnIndex("symbol")));
+        Resources resources = mContext.getResources();
+        if (resources.getBoolean(R.bool.small_screen)) {
+            // only show the company name on phones
+            viewHolder.symbol.setText(cursor.getString(cursor.getColumnIndex("name")));
+        } else {
+            // on larger screens, show both the company name and stock symbol
+            String name = cursor.getString(cursor.getColumnIndex("name"));
+            String symbol = cursor.getString(cursor.getColumnIndex("symbol"));
+            viewHolder.symbol.setText(mContext.getString(R.string.stock_name_formatter, name, symbol));
+        }
+
         viewHolder.bidPrice.setText(mContext.getString(R.string.currency_symbol, cursor.getString(cursor.getColumnIndex("bid_price"))));
         int sdk = Build.VERSION.SDK_INT;
         if (cursor.getInt(cursor.getColumnIndex("is_up")) == 1) {

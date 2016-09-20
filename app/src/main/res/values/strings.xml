@@ -40,4 +40,8 @@
 
     <!-- Deprecated: Customize the title for the stock displayed -->
     <string name="title_activity_stock_detail" translatable="false">StockDetailActivity</string>
+
+    <!-- Format to display name and symbol in list -->
+    <string name="stock_name_formatter" translatable="false"><xliff:g>%1$s</xliff:g> (<xliff:g>%2$s</xliff:g>)</string>
+
 </resources>
