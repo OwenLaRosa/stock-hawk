@@ -17,7 +17,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -258,11 +257,10 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             symbol = stock.getString("symbol");
         } catch (Exception e) { // JSON or IO exception
             // update UI with error message on main thread
-            Log.e("", getString(R.string.add_stock_failed), e);
             findViewById(android.R.id.content).post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast toast = Toast.makeText(MyStocksActivity.this, "Unable to add stock for \"" + name + "\"", Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(MyStocksActivity.this, getString(R.string.add_stock_failed, name), Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
                     toast.show();
                 }
@@ -272,7 +270,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                 findViewById(android.R.id.content).post(new Runnable() {
                     @Override
                     public void run() {
-                        Toast toast = Toast.makeText(MyStocksActivity.this, "Can't find stock for query: \"" + name + "\"", Toast.LENGTH_LONG);
+                        Toast toast = Toast.makeText(MyStocksActivity.this, getString(R.string.find_stock_failed, name), Toast.LENGTH_LONG);
                         toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
                         toast.show();
                     }
