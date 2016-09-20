@@ -133,7 +133,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
     }
 
     private void initSegmentedButton() {
-        mFirstButton = mChartSegmentedButton.addButtonWithTitle("1 Month", new View.OnClickListener() {
+        mFirstButton = mChartSegmentedButton.addButtonWithTitle(getString(R.string.filter_one_month), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AsyncTask.execute(new Runnable() {
@@ -144,7 +144,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
                 });
             }
         });
-        mChartSegmentedButton.addButtonWithTitle("6 Months", new View.OnClickListener() {
+        mChartSegmentedButton.addButtonWithTitle(getString(R.string.filter_six_months), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AsyncTask.execute(new Runnable() {
@@ -155,7 +155,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
                 });
             }
         });
-        mChartSegmentedButton.addButtonWithTitle("1 Year", new View.OnClickListener() {
+        mChartSegmentedButton.addButtonWithTitle(getString(R.string.filter_one_year), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AsyncTask.execute(new Runnable() {

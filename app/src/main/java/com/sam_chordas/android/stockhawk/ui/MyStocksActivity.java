@@ -121,7 +121,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                                     // check for invalid input
                                     // if empty, then don't call the server
                                     if (input.toString().equals("")) {
-                                        Toast toast = Toast.makeText(MyStocksActivity.this, "Please enter a company name or symbol.", Toast.LENGTH_LONG);
+                                        Toast toast = Toast.makeText(MyStocksActivity.this, getString(R.string.input_prompt), Toast.LENGTH_LONG);
                                         toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
                                         toast.show();
                                     }
@@ -132,7 +132,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                                             new String[]{input.toString()}, null);
                                     if (c.getCount() != 0) {
                                         Toast toast =
-                                                Toast.makeText(MyStocksActivity.this, "This stock is already saved!",
+                                                Toast.makeText(MyStocksActivity.this, getString(R.string.stock_already_exists),
                                                         Toast.LENGTH_LONG);
                                         toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
                                         toast.show();
@@ -258,7 +258,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             symbol = stock.getString("symbol");
         } catch (Exception e) { // JSON or IO exception
             // update UI with error message on main thread
-            Log.e("", "Unable to add stock", e);
+            Log.e("", getString(R.string.add_stock_failed), e);
             findViewById(android.R.id.content).post(new Runnable() {
                 @Override
                 public void run() {
@@ -288,7 +288,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                         @Override
                         public void run() {
                             Toast toast =
-                                    Toast.makeText(MyStocksActivity.this, "This stock is already saved!",
+                                    Toast.makeText(MyStocksActivity.this, getString(R.string.stock_already_exists),
                                             Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
                             toast.show();
