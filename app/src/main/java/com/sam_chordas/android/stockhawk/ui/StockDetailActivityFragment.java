@@ -57,7 +57,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
     private SegmentedButton mChartSegmentedButton;
     private RecyclerView mRecyclerView;
     private ImageView mChangeImageView;
-    private TextView mSymbolTextView;
+    private TextView mPriceTextView;
     private TextView mPercentChangeTextView;
     private Button mFirstButton;
 
@@ -107,7 +107,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
                 }));
 
         mChangeImageView = (ImageView) rootView.findViewById(R.id.change_image_view);
-        mSymbolTextView = (TextView) rootView.findViewById(R.id.price_text_view);
+        mPriceTextView = (TextView) rootView.findViewById(R.id.price_text_view);
         mPercentChangeTextView = (TextView) rootView.findViewById(R.id.percent_change_text_view);
 
         // restore the instance state
@@ -278,7 +278,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         mSymbol = symbol;
         String price = data.getString(data.getColumnIndex("bid_price"));
         String percentChange = data.getString(data.getColumnIndex("percent_change"));
-        mSymbolTextView.setText(price);
+        mPriceTextView.setText(price);
         mPercentChangeTextView.setText("(" + percentChange + ")");
         if (percentChange.startsWith("-")) {
             // price is down, show a red arrow
