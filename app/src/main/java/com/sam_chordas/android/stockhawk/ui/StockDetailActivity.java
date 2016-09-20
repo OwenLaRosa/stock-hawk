@@ -17,7 +17,7 @@ public class StockDetailActivity extends AppCompatActivity {
     // URI for a symbol in the content provider
     public static final String DETAIL_URI = "uri";
 
-    public static final String DETAIL_SYMBOL = "symbol";
+    public static final String DETAIL_TITLE = "title";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +49,8 @@ public class StockDetailActivity extends AppCompatActivity {
     private void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
         Intent intent = getIntent();
-        if (null != intent && intent.hasExtra(DETAIL_SYMBOL)) {
-            actionBar.setTitle(intent.getStringExtra(DETAIL_SYMBOL).toUpperCase());
+        if (null != intent && intent.hasExtra(DETAIL_TITLE)) {
+            actionBar.setTitle(intent.getStringExtra(DETAIL_TITLE).toUpperCase());
         }
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
