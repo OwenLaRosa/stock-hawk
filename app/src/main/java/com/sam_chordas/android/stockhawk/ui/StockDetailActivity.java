@@ -50,7 +50,7 @@ public class StockDetailActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         Intent intent = getIntent();
         if (null != intent && intent.hasExtra(DETAIL_TITLE)) {
-            actionBar.setTitle(intent.getStringExtra(DETAIL_TITLE).toUpperCase());
+            actionBar.setTitle(intent.getStringExtra(DETAIL_TITLE));
         }
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
