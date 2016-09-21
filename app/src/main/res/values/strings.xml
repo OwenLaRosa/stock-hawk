@@ -9,12 +9,12 @@
 
     <!-- stock search dialog -->
 
-    <string name="symbol_search">Symbol Search</string>
-    <string name="content_test">Search for a Stock Symbol</string>
+    <string name="symbol_search">Stock Search</string>
+    <string name="content_test">Search for a stock symbol or company name</string>
 
     <!-- adding stocks -->
 
-    <string name="input_hint">FB</string>
+    <string name="input_hint">(e.g. FB, facebook)</string>
     <!-- String is empty so no need to translate, unlikely to be translatable in the future -->
     <string name="input_prefill" translatable="false"></string>
     <string name="input_prompt">Please enter a company name or symbol.</string>
@@ -52,5 +52,6 @@
     <string name="a11y_price_up">Price up</string>
     <string name="a11y_price_down">Price down</string>
     <string name="a11y_price_unchanged">Price unchanged</string>
+    <string name="a11y_search_for_stock">Search for stock</string>
 
 </resources>
