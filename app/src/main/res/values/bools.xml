@@ -2,5 +2,6 @@
 <resources>
 
     <bool name="small_screen">true</bool>
+    <bool name="landscape">false</bool>
 
 </resources>

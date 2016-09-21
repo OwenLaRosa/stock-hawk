@@ -51,8 +51,13 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
     public void onBindViewHolder(final ViewHolder viewHolder, final Cursor cursor) {
         Resources resources = mContext.getResources();
         if (resources.getBoolean(R.bool.small_screen)) {
-            // only show the company name on phones
-            viewHolder.symbol.setText(cursor.getString(cursor.getColumnIndex("name")));
+            if (resources.getBoolean(R.bool.landscape)) {
+                // show the company name on phones in landscape
+                viewHolder.symbol.setText(cursor.getString(cursor.getColumnIndex("name")));
+            } else {
+                // in portrait, show the stock symbol
+                viewHolder.symbol.setText(cursor.getString(cursor.getColumnIndex("symbol")));
+            }
         } else {
             // on larger screens, show both the company name and stock symbol
             String name = cursor.getString(cursor.getColumnIndex("name"));
