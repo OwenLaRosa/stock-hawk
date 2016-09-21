@@ -5,8 +5,6 @@
     <string name="app_name" translatable="false">Stock Hawk</string>
 
     <!-- Action identifiers used by the system -->
-    <string name="action_example" translatable="false">Example action</string>
-    <string name="action_settings" translatable="false">Settings</string>
     <string name="action_change_units" translatable="false">Change Units</string>
 
     <!-- stock search dialog -->
