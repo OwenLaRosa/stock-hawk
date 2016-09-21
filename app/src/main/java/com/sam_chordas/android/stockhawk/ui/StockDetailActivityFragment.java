@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.db.chart.model.LineSet;
 import com.db.chart.view.LineChartView;
 import com.sam_chordas.android.stockhawk.R;
+import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.info.Article;
 import com.sam_chordas.android.stockhawk.rest.NewsAdapter;
 import com.sam_chordas.android.stockhawk.rest.RecyclerViewItemClickListener;
@@ -277,7 +278,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (null != mUri) {
-            return new CursorLoader(getActivity(), mUri, null, null, null, null);
+            return new CursorLoader(getActivity(), mUri, null, QuoteColumns.ISCURRENT + " = ?", new String[]{"1"}, null);
         }
         return null;
     }
