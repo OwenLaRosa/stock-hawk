@@ -14,7 +14,7 @@
 
     <!-- adding stocks -->
 
-    <string name="input_hint">(e.g. FB, facebook)</string>
+    <string name="input_hint" translatable="false">e.g. FB, facebook</string>
     <!-- String is empty so no need to translate, unlikely to be translatable in the future -->
     <string name="input_prefill" translatable="false"></string>
     <string name="input_prompt">Please enter a company name or symbol.</string>
