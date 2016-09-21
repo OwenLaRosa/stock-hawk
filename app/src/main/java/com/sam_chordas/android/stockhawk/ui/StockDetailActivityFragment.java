@@ -217,20 +217,23 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
             final int upperBound = (int) Math.ceil(max / step) * step;
             final int lowerBound = (int) Math.floor(min / step) * step;
             // must be final in order to be used in runnable
-            getView().post(new Runnable() {
-                @Override
-                public void run() {
-                    mChartProgressBar.setVisibility(View.GONE);
-                    // add the data and set any visual appearance
-                    // only access resources if the fragment is attached to prevent illegal state exception
-                    Log.d(LOG_TAG, String.format("Min: %d, max: %d, step: %d", lowerBound, upperBound, step));
-                    if (isAdded()) dataSet.setColor(getResources().getColor(R.color.material_blue_700));
-                    mLineGraph.dismiss();
-                    mLineGraph.addData(dataSet);
-                    mLineGraph.setAxisBorderValues(lowerBound, upperBound, step);
-                    mLineGraph.show();
-                }
-            });
+            if (getView() != null) {
+                getView().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mChartProgressBar.setVisibility(View.GONE);
+                        // add the data and set any visual appearance
+                        // only access resources if the fragment is attached to prevent illegal state exception
+                        Log.d(LOG_TAG, String.format("Min: %d, max: %d, step: %d", lowerBound, upperBound, step));
+                        if (isAdded())
+                            dataSet.setColor(getResources().getColor(R.color.material_blue_700));
+                        mLineGraph.dismiss();
+                        mLineGraph.addData(dataSet);
+                        mLineGraph.setAxisBorderValues(lowerBound, upperBound, step);
+                        mLineGraph.show();
+                    }
+                });
+            }
         }
     }
 
@@ -258,12 +261,14 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         } catch (JSONException e) {
 
         } finally {
-            getView().post(new Runnable() {
-                @Override
-                public void run() {
-                    ((NewsAdapter) mRecyclerView.getAdapter()).addAllArticles(articles);
-                }
-            });
+            if (getView() != null) {
+                getView().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((NewsAdapter) mRecyclerView.getAdapter()).addAllArticles(articles);
+                    }
+                });
+            }
         }
     }
 
