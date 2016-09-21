@@ -301,10 +301,16 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
             mChangeImageView.setImageResource(R.drawable.up_arrow);
             mChangeImageView.setContentDescription(getString(R.string.a11y_price_up));
             // price change in currency, not percent
-            Float monetaryChange = Float.parseFloat(data.getString(data.getColumnIndex("change")));
-            if (monetaryChange != null && monetaryChange == 0) {
-                // for even prices, the content description should change to avoid confusion
-                mChangeImageView.setContentDescription(getString(R.string.a11y_price_unchanged));
+            Float monetaryChange = 1f; // set to non-zero value at first
+            try {
+                monetaryChange = Float.parseFloat(data.getString(data.getColumnIndex("change")));
+            } catch (Exception e) { // NullPointer and NumberFormat exceptions
+                // f it can't be parsed, the old content description will work
+            } finally {
+                if (monetaryChange == 0) {
+                    // use different content description for unchanged prices to avoid confusion
+                    mChangeImageView.setContentDescription(getString(R.string.a11y_price_unchanged));
+                }
             }
         }
 
