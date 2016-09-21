@@ -61,6 +61,7 @@ public class SegmentedButton extends LinearLayout {
     public Button addButtonWithTitle(String title, OnClickListener callback) {
         Button button = new AppCompatButton(mContext);
         button.setText(title);
+        button.setContentDescription(title);
         button.setTextColor(getResources().getColor(R.color.material_blue_500));
         button.setBackgroundColor(getResources().getColor(R.color.white));
         // set the weight so buttons will take up equal space

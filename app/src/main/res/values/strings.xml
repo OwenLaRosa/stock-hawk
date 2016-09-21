@@ -45,4 +45,12 @@
     <!-- Title for chart -->
     <string name="chart_title_text">Closing Price for <xliff:g>%1$s</xliff:g>.</string>
 
+    <!-- Accessibility content descriptions used with non-text buttons -->
+
+    <string name="a11y_show_currency">Show change in dollars</string>
+    <string name="a11y_show_percent">Show percent change</string>
+    <string name="a11y_price_up">Price up</string>
+    <string name="a11y_price_down">Price down</string>
+    <string name="a11y_price_unchanged">Price unchanged</string>
+
 </resources>
