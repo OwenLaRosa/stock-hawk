@@ -2,6 +2,7 @@ package com.sam_chordas.android.stockhawk.widget;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Binder;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
@@ -10,6 +11,7 @@ import android.widget.RemoteViewsService;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
+import com.sam_chordas.android.stockhawk.ui.StockDetailActivity;
 
 /**
  * Created by Owen LaRosa on 9/16/16.
@@ -71,6 +73,15 @@ public class ListWidgetRemoteViewsService extends RemoteViewsService {
                 remoteViews.setTextViewText(R.id.widget_price_text_view, getString(R.string.currency_symbol, price));
                 remoteViews.setTextViewText(R.id.widget_updown_text_view, isUp == 1 ? "▲" : "▼");
 
+                final Intent fillIntent = new Intent();
+                Uri uri = QuoteProvider.Quotes.withSymbol(symbol);
+                fillIntent.setData(uri);
+                fillIntent.putExtra(StockDetailActivity.DETAIL_URI, uri);
+                String name = data.getString(data.getColumnIndex(QuoteColumns.NAME));
+                String title = getResources().getString(R.string.stock_name_formatter, name, symbol);
+                fillIntent.putExtra(StockDetailActivity.DETAIL_TITLE, title);
+                remoteViews.setOnClickFillInIntent(R.id.widget_list_item, fillIntent);
+
                 return remoteViews;
             }
 
@@ -98,4 +109,5 @@ public class ListWidgetRemoteViewsService extends RemoteViewsService {
             }
         };
     }
+
 }
