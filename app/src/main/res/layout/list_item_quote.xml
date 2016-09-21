@@ -13,7 +13,8 @@
         style="@style/StockSymbolTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="left|center_vertical"
+        android:gravity="start|center_vertical"
+        android:textAlignment="viewStart"
         android:layout_weight="1"
         tools:text="GOOG" />
 
@@ -23,6 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingRight="10sp"
+        android:paddingEnd="10sp"
         tools:text="1000.00" />
 
     <TextView

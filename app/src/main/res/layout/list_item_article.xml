@@ -17,7 +17,9 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="@color/white"
-        android:maxLines="2"/>
+        android:maxLines="2"
+        android:layout_gravity="start|center_vertical"
+        android:textAlignment="viewStart"/>
 
     <TextView
         android:id="@+id/article_url_text_view"
@@ -25,6 +27,8 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="@color/light_gray"
-        android:maxLines="1" />
+        android:maxLines="1"
+        android:gravity="start|center_vertical"
+        android:textAlignment="viewStart"/>
 
 </LinearLayout>
