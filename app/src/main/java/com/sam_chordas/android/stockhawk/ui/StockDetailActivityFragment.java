@@ -172,8 +172,9 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         float[] quotes = new float[0];
         Log.d(LOG_TAG, Utils.getFormattedToday());
         Log.d(LOG_TAG, Utils.getFormattedOneYearAgo());
+
         try {
-            quotes = stockClient.getHistoricalDataForStock(mSymbol, Utils.getFormattedOneMonthAgo());
+            quotes = stockClient.getHistoricalDataForStock(mSymbol, startDate);
         } catch (IOException e) {
 
         } catch (JSONException e) {
