@@ -60,7 +60,6 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:gravity="center"
-        android:text="Closing price over 10 years."
         android:textColor="@color/black"
         android:textAppearance="?android:textAppearanceMedium"
         android:textStyle="bold"

@@ -60,6 +60,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
     private TextView mPriceTextView;
     private TextView mPercentChangeTextView;
     private Button mFirstButton;
+    private TextView mChartTitleTextView;
 
     // Keys for saving the instance state
 
@@ -86,6 +87,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
             mUri = (Uri) intent.getParcelableExtra(StockDetailActivity.DETAIL_URI);
         }
 
+        mChartTitleTextView = (TextView) rootView.findViewById(R.id.chart_title_text_view);
         mLineGraph = (LineChartView) rootView.findViewById(R.id.line_graph);
         mChartProgressBar = (ProgressBar) rootView.findViewById(R.id.chart_progress_bar);
         mChartSegmentedButton = (SegmentedButton) rootView.findViewById(R.id.chart_segmented_button);
@@ -136,6 +138,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         mFirstButton = mChartSegmentedButton.addButtonWithTitle(getString(R.string.filter_one_month), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mChartTitleTextView.setText(getString(R.string.chart_title_text, getString(R.string.filter_one_month)));
                 AsyncTask.execute(new Runnable() {
                     @Override
                     public void run() {
@@ -147,6 +150,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         mChartSegmentedButton.addButtonWithTitle(getString(R.string.filter_six_months), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mChartTitleTextView.setText(getString(R.string.chart_title_text, getString(R.string.filter_six_months)));
                 AsyncTask.execute(new Runnable() {
                     @Override
                     public void run() {
@@ -158,6 +162,7 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         mChartSegmentedButton.addButtonWithTitle(getString(R.string.filter_one_year), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mChartTitleTextView.setText(getString(R.string.chart_title_text, getString(R.string.filter_one_year)));
                 AsyncTask.execute(new Runnable() {
                     @Override
                     public void run() {

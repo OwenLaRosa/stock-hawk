@@ -44,4 +44,7 @@
     <!-- Format to display name and symbol in list -->
     <string name="stock_name_formatter" translatable="false"><xliff:g>%1$s</xliff:g> (<xliff:g>%2$s</xliff:g>)</string>
 
+    <!-- Title for chart -->
+    <string name="chart_title_text">Closing Price for <xliff:g>%1$s</xliff:g>.</string>
+
 </resources>
