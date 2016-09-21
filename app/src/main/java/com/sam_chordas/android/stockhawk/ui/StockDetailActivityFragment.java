@@ -29,12 +29,13 @@ import com.sam_chordas.android.stockhawk.rest.NewsAdapter;
 import com.sam_chordas.android.stockhawk.rest.RecyclerViewItemClickListener;
 import com.sam_chordas.android.stockhawk.rest.StockClient;
 import com.sam_chordas.android.stockhawk.rest.Utils;
-import com.squareup.okhttp.OkHttpClient;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import okhttp3.OkHttpClient;
 
 /**
  * A placeholder fragment containing a simple view.

@@ -30,7 +30,7 @@ dependencies {
         transitive = true
     }
     compile 'com.google.android.gms:play-services-gcm:9.4.0'
-    compile 'com.squareup.okhttp:okhttp:2.5.0'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'net.simonvt.schematic:schematic:0.6.3'
     compile 'com.melnykov:floatingactionbutton:1.2.0'
     compile 'com.android.support:design:23.4.0'
