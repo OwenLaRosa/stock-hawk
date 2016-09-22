@@ -2,7 +2,6 @@ package com.sam_chordas.android.stockhawk.service;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
@@ -36,9 +35,6 @@ public class StockTaskService extends GcmTaskService {
     private Context mContext;
     private StringBuilder mStoredSymbols = new StringBuilder();
     private boolean isUpdate;
-
-    // Used to alert the widget that data has updated
-    public static final String ACTION_DATA_UPDATED = "com.sam_chordas.android.stockhawk.app.ACTION_DATA_UPDATED";
 
     public StockTaskService() {
     }
@@ -133,7 +129,7 @@ public class StockTaskService extends GcmTaskService {
                     }
                     mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY,
                             Utils.quoteJsonToContentVals(getResponse));
-                    updateWidget();
+                    Utils.updateWidget(mContext);
                 } catch (RemoteException | OperationApplicationException e) {
                     Log.e(LOG_TAG, "Error applying batch insert", e);
                 }
@@ -143,13 +139,6 @@ public class StockTaskService extends GcmTaskService {
         }
 
         return result;
-    }
-
-    private void updateWidget() {
-        Context context = mContext;
-        Intent updateWidgetIntent = new Intent(ACTION_DATA_UPDATED)
-                .setPackage(mContext.getPackageName());
-        mContext.sendBroadcast(updateWidgetIntent);
     }
 
 }

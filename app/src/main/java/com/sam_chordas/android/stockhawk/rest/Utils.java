@@ -1,6 +1,8 @@
 package com.sam_chordas.android.stockhawk.rest;
 
 import android.content.ContentProviderOperation;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
@@ -23,6 +25,9 @@ public class Utils {
     private static String LOG_TAG = Utils.class.getSimpleName();
 
     public static boolean showPercent = true;
+
+    // Used to alert the widget that data has updated
+    public static final String ACTION_DATA_UPDATED = "com.sam_chordas.android.stockhawk.app.ACTION_DATA_UPDATED";
 
     public static ArrayList quoteJsonToContentVals(String JSON) {
         ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
@@ -134,5 +139,12 @@ public class Utils {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(today);
     }
+
+    public static void updateWidget(Context context) {
+        Intent updateWidgetIntent = new Intent(ACTION_DATA_UPDATED)
+                .setPackage(context.getPackageName());
+        context.sendBroadcast(updateWidgetIntent);
+    }
+
 
 }
