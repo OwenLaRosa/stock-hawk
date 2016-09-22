@@ -140,6 +140,9 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         mFirstButton = mChartSegmentedButton.addButtonWithTitle(getString(R.string.filter_one_month), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mLineGraph.dismiss();
+                // show progress bar to indicate network activity
+                mChartProgressBar.setVisibility(View.VISIBLE);
                 mChartTitleTextView.setText(getString(R.string.chart_title_text, getString(R.string.filter_one_month)));
                 AsyncTask.execute(new Runnable() {
                     @Override
@@ -152,6 +155,8 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         mChartSegmentedButton.addButtonWithTitle(getString(R.string.filter_six_months), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mLineGraph.dismiss();
+                mChartProgressBar.setVisibility(View.VISIBLE);
                 mChartTitleTextView.setText(getString(R.string.chart_title_text, getString(R.string.filter_six_months)));
                 AsyncTask.execute(new Runnable() {
                     @Override
@@ -164,6 +169,8 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         mChartSegmentedButton.addButtonWithTitle(getString(R.string.filter_one_year), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mLineGraph.dismiss();
+                mChartProgressBar.setVisibility(View.VISIBLE);
                 mChartTitleTextView.setText(getString(R.string.chart_title_text, getString(R.string.filter_one_year)));
                 AsyncTask.execute(new Runnable() {
                     @Override
@@ -179,7 +186,6 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
         float[] quotes = new float[0];
         Log.d(LOG_TAG, Utils.getFormattedToday());
         Log.d(LOG_TAG, Utils.getFormattedOneYearAgo());
-
         try {
             quotes = stockClient.getHistoricalDataForStock(mSymbol, startDate);
         } catch (IOException e) {
@@ -228,7 +234,6 @@ public class StockDetailActivityFragment extends Fragment implements LoaderManag
                         Log.d(LOG_TAG, String.format("Min: %d, max: %d, step: %d", lowerBound, upperBound, step));
                         if (isAdded())
                             dataSet.setColor(getResources().getColor(R.color.material_blue_700));
-                        mLineGraph.dismiss();
                         mLineGraph.addData(dataSet);
                         mLineGraph.setAxisBorderValues(lowerBound, upperBound, step);
                         mLineGraph.show();
